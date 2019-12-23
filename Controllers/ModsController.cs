@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModBrowser.Data;
 using ModBrowser.Models;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,10 +20,50 @@ namespace ModBrowser.Controllers
         }
 
         // GET: Mods
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string by, bool order, string search)
         {
             this.ViewData["Domain"] = $"{this.Request.Scheme}://{this.Request.Host}/";
-            return this.View(await this._context.Mod.ToListAsync());
+            this.ViewData["Order"] = !Convert.ToBoolean(this.ViewData["Order"]);
+            IEnumerable<Mod> result = this._context.Mod;
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                result = result.Where(r => r.Name.Contains(search));
+            }
+
+            switch (by)
+            {
+                case "v":
+                    result = result.OrderBy(r => r.Version);
+                    break;
+                case "m":
+                    result = result.OrderBy(r => r.GetModLoaderVersion());
+                    break;
+                case "n":
+                    result = result.OrderBy(r => r.Name);
+                    break;
+                case "u":
+                    result = result.OrderBy(r => r.GetUpdateTimestamp());
+                    break;
+                case "a":
+                    result = result.OrderBy(r => r.Author);
+                    break;
+                case "d":
+                    result = result.OrderBy(r => r.Downloads);
+                    break;
+                case "h":
+                    result = result.OrderBy(r => r.Hot);
+                    break;
+                default:
+                    break;
+            }
+
+            if (Convert.ToBoolean(this.ViewData["Order"]))
+            {
+               result = result.Reverse();
+            }
+
+            return this.View(result.ToList());
         }
 
         // GET: Mods/Details/5

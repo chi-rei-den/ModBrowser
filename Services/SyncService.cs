@@ -109,15 +109,18 @@ namespace ModBrowser.Services
                             {
                                 var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
                                 File.WriteAllBytes($"./mods/{item.Name}.tmod", result);
+                                ExtractInfo(result, item);
                                 db.Mod.Add(item);
                                 db.SaveChanges();
                             }
                             else
                             {
+                                item.ModLoaderVersion = item.ModLoaderVersion ?? found.ModLoaderVersion;
                                 if (found.Version != item.Version)
                                 {
                                     var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
                                     File.WriteAllBytes($"./mods/{item.Name}.tmod", result);
+                                    ExtractInfo(result, item);
                                 }
                                 db.Entry(found).CurrentValues.SetValues(item);
                                 db.Mod.Update(found);

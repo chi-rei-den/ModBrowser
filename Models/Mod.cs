@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace ModBrowser.Models
@@ -9,7 +10,7 @@ namespace ModBrowser.Models
         [Key, JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("displayname")]
+        [JsonProperty("displayname"), DisplayName("Name")]
         public string DisplayName { get; set; }
 
         [JsonProperty("version")]
@@ -18,7 +19,7 @@ namespace ModBrowser.Models
         [JsonProperty("author")]
         public string Author { get; set; }
 
-        [JsonProperty("updateTimeStamp")]
+        [JsonProperty("updateTimeStamp"), DisplayName("Last Updated")]
         public string UpdateTimeStamp { get; set; }
 
         [JsonProperty("description")]
@@ -51,5 +52,7 @@ namespace ModBrowser.Models
         public static Version GetVersion(this Mod mod) => new Version(mod.Version.Substring(1));
 
         public static Version GetModLoaderVersion(this Mod mod) => new Version(mod.ModLoaderVersion.Substring(12));
+
+        public static DateTime GetUpdateTimestamp(this Mod mod) => DateTime.Parse(mod.UpdateTimeStamp);
     }
 }
