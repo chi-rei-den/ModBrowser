@@ -23,7 +23,6 @@ namespace ModBrowser.Controllers
         public async Task<IActionResult> Index(string by, bool order, string search)
         {
             this.ViewData["Domain"] = $"{this.Request.Scheme}://{this.Request.Host}/";
-            this.ViewData["Order"] = !Convert.ToBoolean(this.ViewData["Order"]);
             IEnumerable<Mod> result = this._context.Mod;
 
             if (!string.IsNullOrWhiteSpace(search))
@@ -58,6 +57,7 @@ namespace ModBrowser.Controllers
                     break;
             }
 
+            this.ViewData["Order"] = !order;
             if (Convert.ToBoolean(this.ViewData["Order"]))
             {
                result = result.Reverse();
