@@ -188,9 +188,13 @@ namespace ModBrowser.Data.Migrations
 
                     b.Property<string>("DisplayName");
 
+                    b.Property<int>("Downloads");
+
                     b.Property<string>("Homepage");
 
-                    b.Property<string>("Icon");
+                    b.Property<int>("Hot");
+
+                    b.Property<string>("IconURL");
 
                     b.Property<string>("ModLoaderVersion");
 
@@ -198,7 +202,7 @@ namespace ModBrowser.Data.Migrations
 
                     b.Property<string>("ModSide");
 
-                    b.Property<DateTime>("UpdateTimeStamp");
+                    b.Property<string>("UpdateTimeStamp");
 
                     b.Property<string>("Version");
 

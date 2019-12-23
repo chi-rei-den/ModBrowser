@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ModBrowser.Models.Mod>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DisplayName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Version)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Homepage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateTimeStamp)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <img src="@Html.DisplayFor(modelItem => item.IconURL)" />
+                <br />
+                @Html.DisplayFor(modelItem => item.DisplayName)
+            </td>
+            <td>
+                <a href="@ViewData["Domain"]/tModLoader/download.php?Down=mods/@Html.DisplayFor(modelItem => item.Name)">Download @Html.DisplayFor(modelItem => item.Version)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                <a href="@Html.DisplayFor(modelItem => item.Homepage)">@Html.DisplayFor(modelItem => item.Homepage)</a>
+                <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#@Html.DisplayFor(modelItem => item.Name)">Description</button>
+                <div id="@Html.DisplayFor(modelItem => item.Name)" class="collapse">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </div>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateTimeStamp)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Name">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Name">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Name">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

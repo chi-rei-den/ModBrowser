@@ -9,8 +9,8 @@ using ModBrowser.Data;
 namespace ModBrowser.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191223065914_AddMods")]
-    partial class AddMods
+    [Migration("20191223155157_UpdateMods")]
+    partial class UpdateMods
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -190,9 +190,13 @@ namespace ModBrowser.Data.Migrations
 
                     b.Property<string>("DisplayName");
 
+                    b.Property<int>("Downloads");
+
                     b.Property<string>("Homepage");
 
-                    b.Property<string>("Icon");
+                    b.Property<int>("Hot");
+
+                    b.Property<string>("IconURL");
 
                     b.Property<string>("ModLoaderVersion");
 
@@ -200,7 +204,7 @@ namespace ModBrowser.Data.Migrations
 
                     b.Property<string>("ModSide");
 
-                    b.Property<DateTime>("UpdateTimeStamp");
+                    b.Property<string>("UpdateTimeStamp");
 
                     b.Property<string>("Version");
 
