@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ModBrowser.Data.Migrations
 {
-    public partial class AddMods : Migration
+    public partial class UpdateMods : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -23,13 +22,15 @@ namespace ModBrowser.Data.Migrations
                     DisplayName = table.Column<string>(nullable: true),
                     Version = table.Column<string>(nullable: true),
                     Author = table.Column<string>(nullable: true),
-                    UpdateTimeStamp = table.Column<DateTime>(nullable: false),
+                    UpdateTimeStamp = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     ModLoaderVersion = table.Column<string>(nullable: true),
                     ModReferences = table.Column<string>(nullable: true),
                     Homepage = table.Column<string>(nullable: true),
-                    Icon = table.Column<string>(nullable: true),
-                    ModSide = table.Column<string>(nullable: true)
+                    IconURL = table.Column<string>(nullable: true),
+                    ModSide = table.Column<string>(nullable: true),
+                    Downloads = table.Column<int>(nullable: false),
+                    Hot = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

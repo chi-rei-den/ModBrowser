@@ -1,32 +1,55 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ModBrowser.Models
 {
     public class Mod
     {
-        public string DisplayName { get; set; }
-
-        [Key]
+        [Key, JsonProperty("name")]
         public string Name { get; set; }
 
+        [JsonProperty("displayname")]
+        public string DisplayName { get; set; }
+
+        [JsonProperty("version")]
         public string Version { get; set; }
 
+        [JsonProperty("author")]
         public string Author { get; set; }
 
-        [DataType(DataType.Date)]
-        public DateTime UpdateTimeStamp { get; set; }
+        [JsonProperty("updateTimeStamp")]
+        public string UpdateTimeStamp { get; set; }
 
+        [JsonProperty("description")]
         public string Description { get; set; }
 
+        [JsonProperty("modloaderversion")]
         public string ModLoaderVersion { get; set; }
 
-        public string ModReferences { get; set; }
+        [JsonProperty("modreferences")]
+        public string ModReferences { get; set; } = "";
 
+        [JsonProperty("homepage")]
         public string Homepage { get; set; }
 
-        public string Icon { get; set; }
+        [JsonProperty("iconurl")]
+        public string IconURL { get; set; }
 
-        public string ModSide { get; set; }
+        [JsonProperty("modside")]
+        public string ModSide { get; set; } = "Both";
+
+        [JsonProperty("downloads")]
+        public int Downloads { get; set; }
+
+        [JsonProperty("hot")]
+        public int Hot { get; set; }
+    }
+
+    public static class ModHelper
+    {
+        public static Version GetVersion(this Mod mod) => new Version(mod.Version.Substring(1));
+
+        public static Version GetModLoaderVersion(this Mod mod) => new Version(mod.ModLoaderVersion.Substring(12));
     }
 }
