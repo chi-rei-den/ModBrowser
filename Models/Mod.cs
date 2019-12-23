@@ -7,16 +7,16 @@ namespace ModBrowser.Models
 {
     public class Mod
     {
-        [Key, JsonProperty("name")]
+        [Key, JsonProperty("name"), Required]
         public string Name { get; set; }
 
         [JsonProperty("displayname"), DisplayName("Name")]
         public string DisplayName { get; set; }
 
-        [JsonProperty("version")]
+        [JsonProperty("version"), Required]
         public string Version { get; set; }
 
-        [JsonProperty("author")]
+        [JsonProperty("author"), Required]
         public string Author { get; set; }
 
         [JsonProperty("updateTimeStamp"), DisplayName("Last Updated")]
