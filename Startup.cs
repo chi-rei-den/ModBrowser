@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using ModBrowser.Data;
-using ModBrowser.Services;
 
 namespace ModBrowser
 {
@@ -23,19 +21,15 @@ namespace ModBrowser
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=.\\wwwroot\\sqlite.db"));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, SyncService>();
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllersWithViews();
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -48,58 +42,60 @@ namespace ModBrowser
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 // app.UseHsts();
             }
-
             // app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+
+            app.UseRouting();
 
             app.UseAuthentication();
+            app.UseAuthorization();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute(
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
                     name: "tModLoaderDownload",
-                    template: "tModLoader/download.php",
+                    pattern: "tModLoader/download.php",
                     defaults: new { controller = "ModLoader", action = "Download" });
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "tModLoaderQueryDesc",
-                    template: "tModLoader/tools/querymodnamehomepagedescription.php",
+                    pattern: "tModLoader/tools/querymodnamehomepagedescription.php",
                     defaults: new { controller = "ModLoader", action = "HomepageAndDescription" });
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "tModLoaderQueryURL",
-                    template: "tModLoader/tools/querymoddownloadurl.php",
+                    pattern: "tModLoader/tools/querymoddownloadurl.php",
                     defaults: new { controller = "ModLoader", action = "GetDownloadURL" });
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "tModLoaderModInfo",
-                    template: "tModLoader/tools/modinfo.php",
+                    pattern: "tModLoader/tools/modinfo.php",
                     defaults: new { controller = "ModLoader", action = "ModInfo" });
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "tModLoaderModVersion",
-                    template: "tModLoader/tools/latestmodversion.php",
+                    pattern: "tModLoader/tools/latestmodversion.php",
                     defaults: new { controller = "ModLoader", action = "ModVersion" });
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "tModLoaderModVersionSimple",
-                    template: "tModLoader/tools/latestmodversionsimple.php",
+                    pattern: "tModLoader/tools/latestmodversionsimple.php",
                     defaults: new { controller = "ModLoader", action = "ModVersionSimple" });
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "tModLoaderModHomepage",
-                    template: "tModLoader/tools/querymodhomepage.php",
+                    pattern: "tModLoader/tools/querymodhomepage.php",
                     defaults: new { controller = "ModLoader", action = "ModHomepage" });
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "tModLoaderModDescription",
-                    template: "tModLoader/moddescription.php",
+                    pattern: "tModLoader/moddescription.php",
                     defaults: new { controller = "ModLoader", action = "ModDescription" });
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "tModLoaderModListing",
-                    template: "tModLoader/listmods.php",
+                    pattern: "tModLoader/listmods.php",
                     defaults: new { controller = "ModLoader", action = "ModListing" });
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "tModLoaderDirectModListing",
-                    template: "tModLoader/DirectModDownloadListing.php",
+                    pattern: "tModLoader/DirectModDownloadListing.php",
                     defaults: new { controller = "Mods", action = "Index" });
+                endpoints.MapRazorPages();
             });
         }
     }
