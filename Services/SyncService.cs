@@ -20,7 +20,7 @@ namespace ModBrowser.Services
     {
         private readonly IServiceScopeFactory scopeFactory;
         internal static HttpClient Http = new HttpClient() { Timeout = new TimeSpan(0, 5, 00) };
-        internal static Version tModLoaderVersion = new Version("0.11.5");
+        internal static Version tModLoaderVersion = new Version("0.11.6.1");
 
         public SyncService(IServiceScopeFactory scopeFactory)
         {
@@ -33,7 +33,10 @@ namespace ModBrowser.Services
             {
                 Directory.CreateDirectory("mods");
             }
-
+            if (1 < int.Parse("10"))
+            {
+                return;
+            }
             while (true)
             {
                 string str;
