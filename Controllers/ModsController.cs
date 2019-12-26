@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModBrowser.Data;
 using ModBrowser.Models;
+using ModBrowser.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,7 +90,7 @@ namespace ModBrowser.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            return this.View();
+            return this.View(new ModVM());
         }
 
         // POST: Mods/Create
@@ -98,16 +99,23 @@ namespace ModBrowser.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("DisplayName,Name,Version,Author,UpdateTimeStamp,Description,ModLoaderVersion,ModReferences,Homepage,Icon,ModSide")] Mod mod)
+        public async Task<IActionResult> Create(ModVM mod)
         {
             if (this.ModelState.IsValid)
             {
+                if (this._context.Mod.Find(mod.Name) != null)
+                {
+                    return this.Conflict();
+                }
+
                 if (!mod.Author.Split(", ").Contains(this.User.FindFirstValue(ClaimTypes.Name)))
                 {
                     mod.Author += ", " + this.User.FindFirstValue(ClaimTypes.Name);
                 }
 
-                this._context.Add(mod);
+                var entry = new Mod();
+                this._context.Entry(entry).CurrentValues.SetValues(mod);
+                this._context.Add(entry);
                 await this._context.SaveChangesAsync();
                 return this.RedirectToAction(nameof(Index));
             }

@@ -1,4 +1,4 @@
-﻿@model ModBrowser.Models.Mod
+﻿@model ModBrowser.ViewModels.ModVM
 
 @{
     ViewData["Title"] = "Create";
@@ -6,21 +6,21 @@
 
 <h1>Create</h1>
 
-<h4>Mod</h4>
+<h4>ModVM</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="DisplayName" class="control-label"></label>
-                <input asp-for="DisplayName" class="form-control" />
-                <span asp-validation-for="DisplayName" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DisplayName" class="control-label"></label>
+                <input asp-for="DisplayName" class="form-control" />
+                <span asp-validation-for="DisplayName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Version" class="control-label"></label>
@@ -33,11 +33,6 @@
                 <span asp-validation-for="Author" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UpdateTimeStamp" class="control-label"></label>
-                <input asp-for="UpdateTimeStamp" class="form-control" type="datetime" />
-                <span asp-validation-for="UpdateTimeStamp" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
                 <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
@@ -48,24 +43,28 @@
                 <span asp-validation-for="ModLoaderVersion" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ModReferences" class="control-label"></label>
-                <input asp-for="ModReferences" class="form-control" />
-                <span asp-validation-for="ModReferences" class="text-danger"></span>
+                <label asp-for="ModReference" class="control-label"></label>
+                <input asp-for="ModReference" class="form-control" />
+                <span asp-validation-for="ModReference" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Homepage" class="control-label"></label>
-                <input asp-for="Homepage" class="form-control" type="url" />
+                <input asp-for="Homepage" class="form-control" />
                 <span asp-validation-for="Homepage" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="IconURL" class="control-label"></label>
-                <input asp-for="IconURL" class="form-control" type="url" />
+                <input asp-for="IconURL" class="form-control" />
                 <span asp-validation-for="IconURL" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ModSide" class="control-label"></label>
-                <input asp-for="ModSide" class="form-control" />
+                <select asp-for="ModSide" class="form-control"></select>
                 <span asp-validation-for="ModSide" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="File" class="control-label"></label>
+                <input asp-for="File" />
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
