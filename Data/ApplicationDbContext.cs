@@ -1,16 +1,21 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ModBrowser.ViewModels;
+using ModBrowser.Models;
+using System.Linq;
 
 namespace ModBrowser.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-            this.Database.Migrate();
+            if (this.Database.GetPendingMigrations().Any())
+            {
+                this.Database.Migrate();
+            }
         }
-        public DbSet<ModBrowser.Models.Mod> Mod { get; set; }
+
+        public DbSet<Mod> Mod { get; set; }
     }
 }
