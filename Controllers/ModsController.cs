@@ -6,6 +6,7 @@ using ModBrowser.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ModBrowser.Controllers
@@ -101,6 +102,11 @@ namespace ModBrowser.Controllers
         {
             if (this.ModelState.IsValid)
             {
+                if (!mod.Author.Split(", ").Contains(this.User.FindFirstValue(ClaimTypes.Name)))
+                {
+                    mod.Author += ", " + this.User.FindFirstValue(ClaimTypes.Name);
+                }
+
                 this._context.Add(mod);
                 await this._context.SaveChangesAsync();
                 return this.RedirectToAction(nameof(Index));
@@ -140,6 +146,12 @@ namespace ModBrowser.Controllers
 
             if (this.ModelState.IsValid)
             {
+                var existing = this._context.Mod.Find(id);
+                if (!existing.Author.Split(", ").Contains(this.User.FindFirstValue(ClaimTypes.Name)))
+                {
+                    return this.Forbid();
+                }
+
                 try
                 {
                     this._context.Update(mod);
@@ -187,6 +199,11 @@ namespace ModBrowser.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var mod = await this._context.Mod.FindAsync(id);
+            if (!mod.Author.Split(", ").Contains(this.User.FindFirstValue(ClaimTypes.Name)))
+            {
+                return this.Forbid();
+            }
+
             this._context.Mod.Remove(mod);
             await this._context.SaveChangesAsync();
             return this.RedirectToAction(nameof(Index));
