@@ -1,6 +1,7 @@
 ﻿using Ionic.Zlib;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using ModBrowser.Data;
 using ModBrowser.Models;
 using Newtonsoft.Json;
@@ -19,12 +20,14 @@ namespace ModBrowser.Services
     public class SyncService : BackgroundService
     {
         private readonly IServiceScopeFactory scopeFactory;
+        private readonly ILogger<SyncService> _logger;
         internal static HttpClient Http = new HttpClient() { Timeout = new TimeSpan(0, 5, 00) };
         internal static Version tModLoaderVersion = new Version("0.11.6.1");
 
-        public SyncService(IServiceScopeFactory scopeFactory)
+        public SyncService(IServiceScopeFactory scopeFactory, ILogger<SyncService> logger)
         {
             this.scopeFactory = scopeFactory;
+            this._logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -44,6 +47,7 @@ namespace ModBrowser.Services
                         ["platform"] = "w",
                         ["netversion"] = "4.0",
                     })).Result.Content.ReadAsStringAsync();
+                    this._logger.LogInformation("Start Sync");
                 }
                 catch
                 {
@@ -63,6 +67,7 @@ namespace ModBrowser.Services
                 if (json.ContainsKey("update"))
                 {
                     tModLoaderVersion = new Version(json["update"].ToString());
+                    this._logger.LogInformation($"Update to {json["update"]}");
                     continue;
                 }
 
@@ -84,6 +89,7 @@ namespace ModBrowser.Services
                 }
 
                 var modlist = JsonConvert.DeserializeObject<List<Mod>>(list);
+                this._logger.LogInformation($"Unpacked Mod list ({modlist.Count})");
 
                 var descriptions = Http.GetStringAsync("http://javid.ddns.net/tModLoader/tools/querymodnamehomepagedescription.php").Result;
                 var desclist = JsonConvert.DeserializeObject<List<Mod>>(descriptions).ToDictionary(i => i.Name);
@@ -104,21 +110,24 @@ namespace ModBrowser.Services
                         {
                             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                             var found = db.Mod.Find(item.Name);
-                            item.ModLoaderVersion = item.ModLoaderVersion ?? found.ModLoaderVersion;
-                            if (found?.Version != item.Version)
-                            {
-                                var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
-                                File.WriteAllBytes($"./mods/{item.Name}.tmod", result);
-                                ExtractInfo(result, item);
-                            }
+                            item.ModLoaderVersion ??= found.ModLoaderVersion;
                             if (found == null)
                             {
+                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) created.");
                                 db.Mod.Add(item);
                             }
                             else
                             {
                                 db.Entry(found).CurrentValues.SetValues(item);
                                 db.Mod.Update(found);
+                            }
+
+                            if (found?.Version != item.Version)
+                            {
+                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}");
+                                var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
+                                File.WriteAllBytes($"./mods/{item.Name}.tmod", result);
+                                ExtractInfo(result, item);
                             }
                             db.SaveChanges();
                         }
@@ -128,6 +137,7 @@ namespace ModBrowser.Services
                     }
                 });
 
+                this._logger.LogInformation("End of Sync, Sleep");
                 await Task.Delay(TimeSpan.FromMinutes(30));
             }
         }
