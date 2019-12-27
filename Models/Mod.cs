@@ -1,7 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using ModBrowser.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 
 namespace ModBrowser.Models
 {
@@ -54,5 +56,9 @@ namespace ModBrowser.Models
         public static Version GetModLoaderVersion(this Mod mod) => new Version(mod.ModLoaderVersion.Substring(12));
 
         public static DateTime GetUpdateTimestamp(this Mod mod) => DateTime.Parse(mod.UpdateTimeStamp);
+
+        public static string FilePath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".tmod");
+
+        public static string FilePath(this ModVM mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".tmod");
     }
 }

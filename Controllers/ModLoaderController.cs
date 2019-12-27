@@ -24,8 +24,9 @@ namespace ModBrowser.Controllers
         public IActionResult Download(string Down)
         {
             var filename = Path.GetFileNameWithoutExtension(Down);
-            return this._context.Mod.Find(filename) != null
-                ? this.PhysicalFile($"./mods/{filename}.tmod", MediaTypeNames.Application.Octet, filename + ".tmod")
+            var mod = this._context.Mod.Find(filename);
+            return mod != null
+                ? this.PhysicalFile(mod.FilePath(), MediaTypeNames.Application.Octet, filename + ".tmod")
                 : (IActionResult)this.NotFound();
         }
 
