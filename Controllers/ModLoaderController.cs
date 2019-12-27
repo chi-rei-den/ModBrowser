@@ -87,7 +87,7 @@ namespace ModBrowser.Controllers
         }
 
         [HttpGet, HttpPost]
-        public IActionResult ModListing(string modloaderversion, string platform, string netversion)
+        public IActionResult ModListing(string modloaderversion, string platform, string netversion, string uncompressed)
         {
             var clientVersion = new Version(!string.IsNullOrWhiteSpace(modloaderversion) && modloaderversion.Length > 12
                 ? modloaderversion.Substring(12)
@@ -101,7 +101,7 @@ namespace ModBrowser.Controllers
                 return m;
             });
 
-            if (clientVersion <= new Version(0, 11))
+            if (clientVersion <= new Version(0, 11) || !string.IsNullOrWhiteSpace(uncompressed))
             {
                 return this.Json(new
                 {
@@ -149,6 +149,27 @@ namespace ModBrowser.Controllers
                         modlist_compressed = modlist
                     });
             }
+        }
+
+        // TODO: unpublishmymod.php
+        [HttpGet, HttpPost]
+        public IActionResult Unpublish(string name, string steamid64, string modloaderversion, string passphrase)
+        {
+            throw new NotImplementedException();
+        }
+
+        // TODO: listmymods.php
+        [HttpGet, HttpPost]
+        public IActionResult Owned(string steamid64, string modloaderversion, string passphrase)
+        {
+            throw new NotImplementedException();
+        }
+
+        // TODO: publishmod.php
+        [HttpGet, HttpPost]
+        public IActionResult Publish(string displayname, string displaynameclean, string name, string version, string author, string homepage, string description, string steamid64, string modloaderversion, string passphrase, string modreferences, string modside)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -21,7 +21,8 @@ namespace ModBrowser.Services
     {
         private readonly IServiceScopeFactory scopeFactory;
         private readonly ILogger<SyncService> _logger;
-        internal static HttpClient Http = new HttpClient() { Timeout = new TimeSpan(0, 5, 00) };
+        internal static HttpClient Http = new HttpClient() { Timeout = new TimeSpan(0, 5, 0) };
+        internal static readonly TimeSpan Interval = TimeSpan.FromMinutes(30);
         internal static Version tModLoaderVersion = new Version("0.11.6.1");
 
         public SyncService(IServiceScopeFactory scopeFactory, ILogger<SyncService> logger)
@@ -51,6 +52,8 @@ namespace ModBrowser.Services
                 }
                 catch
                 {
+                    this._logger.LogInformation("POST listmods.php fail, retry");
+                    await Task.Delay(Interval);
                     continue;
                 }
 
@@ -61,6 +64,8 @@ namespace ModBrowser.Services
                 }
                 catch
                 {
+                    this._logger.LogInformation("Json Deserialize exception, retry");
+                    await Task.Delay(Interval);
                     continue;
                 }
 
@@ -73,6 +78,8 @@ namespace ModBrowser.Services
 
                 if (!json.ContainsKey("modlist_compressed"))
                 {
+                    this._logger.LogInformation("modlist_compressed not found, retry");
+                    await Task.Delay(Interval);
                     continue;
                 }
 
@@ -138,7 +145,7 @@ namespace ModBrowser.Services
                     }
                     catch (Exception e)
                     {
-                        this._logger.LogError(e.ToString());
+                        this._logger.LogError($"Mod Update {item.DisplayName} ({item.Name}) : " + e.ToString());
                     }
                 }
 #if PAR
@@ -146,7 +153,7 @@ namespace ModBrowser.Services
 #endif
 
                 this._logger.LogInformation("End of Sync, Sleep");
-                await Task.Delay(TimeSpan.FromMinutes(30));
+                await Task.Delay(Interval);
             }
         }
 

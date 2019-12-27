@@ -28,60 +28,61 @@
             <th>
                 @Html.ActionLink(Html.DisplayNameFor(model => model.Author), "Index", new { by = "a", order = ViewData["Order"] })
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Homepage)
-            </th>
+            <th />
             <th>
                 @Html.ActionLink(Html.DisplayNameFor(model => model.UpdateTimeStamp), "Index", new { by = "u", order = ViewData["Order"] })
             </th>
-            <th>@Html.ActionLink("Downloads", "Index", new { by = "d", order = ViewData["Order"] }) | @Html.ActionLink("Hot", "Index", new { by = "h", order = ViewData["Order"] }) | @Html.ActionLink("ModLoader", "Index", new { by = "m", order = ViewData["Order"] })</th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model.ModLoaderVersion), "Index", new { by = "m", order = ViewData["Order"] })
+            </th>
+            <th>@Html.ActionLink("Downloads", "Index", new { by = "d", order = ViewData["Order"] }) | @Html.ActionLink("Hot", "Index", new { by = "h", order = ViewData["Order"] })</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DisplayName)
-                    <br />
-                    @Html.DisplayFor(modelItem => item.Name)
-                    <br />
-                    <img src="@Html.DisplayFor(modelItem => item.IconURL)" />
-                </td>
-                <td>
-                    <a href="@ViewData["Domain"]tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">Download @Html.DisplayFor(modelItem => item.Version)</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Author)
-                </td>
-                <td>
-                    @if (!string.IsNullOrWhiteSpace(item.Homepage))
-                    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DisplayName)
+                <br />
+                @Html.DisplayFor(modelItem => item.Name)
+                <br />
+                <img src="@Html.DisplayFor(modelItem => item.IconURL)" />
+            </td>
+            <td>
+                <a href="@ViewData["Domain"]tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">Download @Html.DisplayFor(modelItem => item.Version)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @if (!string.IsNullOrWhiteSpace(item.Homepage))
+                {
+                    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#home_@Html.DisplayFor(modelItem => item.Name)">Homepage</button>
+                    <div id="home_@Html.DisplayFor(modelItem => item.Name)" class="collapse">
                         <a href="@Html.DisplayFor(modelItem => item.Homepage)">@Html.DisplayFor(modelItem => item.Homepage)</a>
-                        if (!string.IsNullOrWhiteSpace(item.Description))
-                        {
-                            <br />
-                        }
-                    }
-                    @if (!string.IsNullOrWhiteSpace(item.Description))
-                    {
-                        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#@Html.DisplayFor(modelItem => item.Name)">Description</button>
-                        <div id="@Html.DisplayFor(modelItem => item.Name)" class="collapse">
-                            @item.Description.Replace("\r\n", "<br />")
-                        </div>
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UpdateTimeStamp)
-                    <br />
-                    @Html.DisplayFor(modelItem => item.ModLoaderVersion)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Name">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Name">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Name">Delete</a>
-                </td>
-            </tr>
+                    </div>
+                }
+                @if (!string.IsNullOrWhiteSpace(item.Description))
+                {
+                    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#desc_@Html.DisplayFor(modelItem => item.Name)">Description</button>
+                    <div id="desc_@Html.DisplayFor(modelItem => item.Name)" class="collapse">
+                        @item.Description.Replace("\r\n", "<br />")
+                    </div>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdateTimeStamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModLoaderVersion)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Name">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Name">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Name">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
