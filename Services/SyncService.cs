@@ -132,8 +132,9 @@ namespace ModBrowser.Services
                             db.SaveChanges();
                         }
                     }
-                    catch
+                    catch (Exception e)
                     {
+                        this._logger.LogError(e.ToString());
                     }
                 });
 
