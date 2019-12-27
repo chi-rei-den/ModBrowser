@@ -130,6 +130,7 @@ namespace ModBrowser.Services
                                 this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}");
                                 var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
                                 File.WriteAllBytes(item.FilePath(), result);
+                                File.SetLastWriteTimeUtc(item.FilePath(), item.GetUpdateTimestamp());
                                 ExtractInfo(result, item);
                             }
                             db.SaveChanges();

@@ -61,10 +61,11 @@ namespace ModBrowser
                 Directory.CreateDirectory(modsFolder);
             }
 
-            app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            app.UseFileServer(new FileServerOptions
             {
                 FileProvider = new PhysicalFileProvider(modsFolder),
-                RequestPath = "/direct"
+                RequestPath = "/direct",
+                EnableDirectoryBrowsing = true
             });
 
             app.UseEndpoints(endpoints =>
