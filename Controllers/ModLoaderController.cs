@@ -89,7 +89,9 @@ namespace ModBrowser.Controllers
         [HttpGet, HttpPost]
         public IActionResult ModListing(string modloaderversion, string platform, string netversion)
         {
-            var clientVersion = new Version(modloaderversion.Substring(12));
+            var clientVersion = new Version(!string.IsNullOrWhiteSpace(modloaderversion) && modloaderversion.Length > 12
+                ? modloaderversion.Substring(12)
+                : "0.0.0.0");
             var modlist = this._context.Mod.AsEnumerable().Select((m) =>
             {
                 if (m.GetModLoaderVersion() <= clientVersion)
