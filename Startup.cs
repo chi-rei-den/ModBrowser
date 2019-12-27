@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ModBrowser.Data;
 using ModBrowser.Models;
+using ModBrowser.Services;
 
 namespace ModBrowser
 {
@@ -25,6 +25,7 @@ namespace ModBrowser
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=.\\wwwroot\\sqlite.db"));
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddSingleton<IHostedService, SyncService>();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

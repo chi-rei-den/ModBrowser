@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using ModBrowser.Data;
@@ -9,9 +8,7 @@ using ModBrowser.Models;
 using ModBrowser.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using FileIO = System.IO.File;
 
@@ -71,7 +68,7 @@ namespace ModBrowser.Controllers
             this.ViewData["Order"] = !order;
             if (Convert.ToBoolean(this.ViewData["Order"]))
             {
-               result = result.Reverse();
+                result = result.Reverse();
             }
 
             return this.View(result.ToList());
@@ -87,12 +84,7 @@ namespace ModBrowser.Controllers
 
             var mod = await this._context.Mod
                 .FirstOrDefaultAsync(m => m.Name == id);
-            if (mod == null)
-            {
-                return this.NotFound();
-            }
-
-            return this.View(mod);
+            return mod == null ? this.NotFound() : (IActionResult)this.View(mod);
         }
 
         // GET: Mods/Create
@@ -153,6 +145,11 @@ namespace ModBrowser.Controllers
             {
                 return this.NotFound();
             }
+
+            var m = new ModVM();
+            var track = this._context.Entry(m);
+            track.CurrentValues.SetValues(mod);
+            track.State = EntityState.Detached;
             return this.View(mod);
         }
 
