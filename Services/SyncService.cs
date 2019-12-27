@@ -98,11 +98,14 @@ namespace ModBrowser.Services
                     item.Homepage = !string.IsNullOrWhiteSpace(desclist[item.Name].Homepage) ? desclist[item.Name].Homepage : null;
                     item.Description = !string.IsNullOrWhiteSpace(desclist[item.Name].Description) ? desclist[item.Name].Description : null;
                 }
-
+#if PAR
                 Parallel.ForEach(modlist, new ParallelOptions
                 {
                     MaxDegreeOfParallelism = 2
                 }, async item =>
+#else
+                foreach (var item in modlist)
+#endif
                 {
                     try
                     {
@@ -136,7 +139,10 @@ namespace ModBrowser.Services
                     {
                         this._logger.LogError(e.ToString());
                     }
-                });
+                }
+#if PAR
+                );
+#endif
 
                 this._logger.LogInformation("End of Sync, Sleep");
                 await Task.Delay(TimeSpan.FromMinutes(30));
