@@ -10,7 +10,7 @@ namespace ModBrowser.ViewModels
 {
     public class ModVM : IValidatableObject
     {
-        [Key, Required, DisplayName("Internal Name"), RegularExpression("^[!\\-_a-zA-Z0-9]$")]
+        [Key, Required, DisplayName("Internal Name"), RegularExpression("^[!\\-_a-zA-Z0-9]+$")]
         public string Name { get; set; }
 
         [DisplayName("Name")]

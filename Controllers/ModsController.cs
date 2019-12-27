@@ -31,7 +31,7 @@ namespace ModBrowser.Controllers
         }
 
         // GET: Mods
-        public async Task<IActionResult> Index(string by, bool order, string search)
+        public IActionResult Index(string by, bool order, string search)
         {
             this.ViewData["Domain"] = $"{this.Request.Scheme}://{this.Request.Host}/";
             IEnumerable<Mod> result = this._context.Mod;
