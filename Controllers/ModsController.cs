@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ModBrowser.Data;
 using ModBrowser.Models;
 using ModBrowser.ViewModels;
@@ -20,11 +21,13 @@ namespace ModBrowser.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<ModsController> _logger;
 
-        public ModsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ModsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<ModsController> logger)
         {
             this._context = context;
             this._userManager = userManager;
+            this._logger = logger;
         }
 
         // GET: Mods
@@ -120,6 +123,7 @@ namespace ModBrowser.Controllers
                     mod.Author += ", " + user.AuthorName;
                 }
 
+                this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Create {mod.DisplayName} ({mod.Name})");
                 var entry = new Mod();
                 this._context.Entry(entry).CurrentValues.SetValues(mod);
                 this._context.Add(entry);
@@ -175,6 +179,7 @@ namespace ModBrowser.Controllers
                 }
 
                 this._context.Entry(existing).CurrentValues.SetValues(mod);
+                this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Update {mod.DisplayName} ({mod.Name})");
                 try
                 {
                     var filename = $"./mods/{mod.Name}.tmod";
@@ -234,6 +239,7 @@ namespace ModBrowser.Controllers
                 return this.Forbid();
             }
 
+            this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Delete {mod.DisplayName} ({mod.Name})");
             this._context.Mod.Remove(mod);
             await this._context.SaveChangesAsync();
             return this.RedirectToAction(nameof(Index));
