@@ -55,9 +55,15 @@ namespace ModBrowser
             app.UseAuthentication();
             app.UseAuthorization();
 
+            var modsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods");
+            if (!Directory.Exists(modsFolder))
+            {
+                Directory.CreateDirectory(modsFolder);
+            }
+
             app.UseDirectoryBrowser(new DirectoryBrowserOptions
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods")),
+                FileProvider = new PhysicalFileProvider(modsFolder),
                 RequestPath = "/direct"
             });
 
