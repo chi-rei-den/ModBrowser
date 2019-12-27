@@ -55,12 +55,21 @@
                     @Html.DisplayFor(modelItem => item.Author)
                 </td>
                 <td>
-                    <a href="@Html.DisplayFor(modelItem => item.Homepage)">@Html.DisplayFor(modelItem => item.Homepage)</a>
-                    <br />
-                    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#@Html.DisplayFor(modelItem => item.Name)">Description</button>
-                    <div id="@Html.DisplayFor(modelItem => item.Name)" class="collapse">
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </div>
+                    @if (!string.IsNullOrWhiteSpace(item.Homepage))
+                    {
+                        <a href="@Html.DisplayFor(modelItem => item.Homepage)">@Html.DisplayFor(modelItem => item.Homepage)</a>
+                        if (!string.IsNullOrWhiteSpace(item.Description))
+                        {
+                            <br />
+                        }
+                    }
+                    @if (!string.IsNullOrWhiteSpace(item.Description))
+                    {
+                        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#@Html.DisplayFor(modelItem => item.Name)">Description</button>
+                        <div id="@Html.DisplayFor(modelItem => item.Name)" class="collapse">
+                            @Html.DisplayFor(modelItem => item.Description.Replace("\r\n", "<br />"))
+                        </div>
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.UpdateTimeStamp)

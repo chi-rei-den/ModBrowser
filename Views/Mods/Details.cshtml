@@ -38,7 +38,7 @@
             @Html.DisplayNameFor(model => model.Description)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Description.Replace("\r\n", "<br />"))
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ModLoaderVersion)
@@ -55,14 +55,15 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Homepage)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Homepage)
+        <dd class="col-sm-10">
+            <a href="@Html.DisplayFor(model => model.Homepage)">@Html.DisplayFor(model => model.Homepage)</a>
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.IconURL)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IconURL)
+        <dd class="col-sm-10">
+            <img src="@Html.DisplayFor(model => model.IconURL)" />
+            <a href="@Html.DisplayFor(model => model.IconURL)">@Html.DisplayFor(model => model.IconURL)</a>
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ModSide)
