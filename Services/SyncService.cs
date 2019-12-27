@@ -110,7 +110,7 @@ namespace ModBrowser.Services
                         {
                             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                             var found = db.Mod.Find(item.Name);
-                            item.ModLoaderVersion ??= found.ModLoaderVersion;
+                            item.ModLoaderVersion ??= found?.ModLoaderVersion;
                             if (found == null)
                             {
                                 this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) created.");
