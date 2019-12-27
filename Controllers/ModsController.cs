@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using ModBrowser.Data;
 using ModBrowser.Models;
 using ModBrowser.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using FileIO = System.IO.File;
 
 namespace ModBrowser.Controllers
 {
@@ -120,6 +123,12 @@ namespace ModBrowser.Controllers
                 var entry = new Mod();
                 this._context.Entry(entry).CurrentValues.SetValues(mod);
                 this._context.Add(entry);
+                var filename = $"./mods/{mod.Name}.tmod";
+                if (FileIO.Exists(filename))
+                {
+                    FileIO.Delete(filename);
+                }
+                mod.File.CopyTo(FileIO.OpenWrite($"./mods/{mod.Name}.tmod"));
                 await this._context.SaveChangesAsync();
                 return this.RedirectToAction(nameof(Index));
             }
@@ -149,7 +158,7 @@ namespace ModBrowser.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(string id, [Bind("DisplayName,Name,Version,Author,UpdateTimeStamp,Description,ModLoaderVersion,ModReferences,Homepage,Icon,ModSide")] Mod mod)
+        public async Task<IActionResult> Edit(string id, ModVM mod)
         {
             if (id != mod.Name)
             {
@@ -165,9 +174,16 @@ namespace ModBrowser.Controllers
                     return this.Forbid();
                 }
 
+                this._context.Entry(existing).CurrentValues.SetValues(mod);
                 try
                 {
-                    this._context.Update(mod);
+                    var filename = $"./mods/{mod.Name}.tmod";
+                    if (FileIO.Exists(filename))
+                    {
+                        FileIO.Delete(filename);
+                    }
+                    mod.File.CopyTo(FileIO.OpenWrite($"./mods/{mod.Name}.tmod"));
+                    this._context.Update(existing);
                     await this._context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
