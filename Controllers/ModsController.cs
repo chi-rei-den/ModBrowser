@@ -119,12 +119,12 @@ namespace ModBrowser.Controllers
                 var entry = new Mod();
                 this._context.Entry(entry).CurrentValues.SetValues(mod);
                 this._context.Add(entry);
-                var filename = $"./mods/{mod.Name}.tmod";
+                var filename = mod.FilePath();
                 if (FileIO.Exists(filename))
                 {
                     FileIO.Delete(filename);
                 }
-                mod.File.CopyTo(FileIO.OpenWrite($"./mods/{mod.Name}.tmod"));
+                mod.File.CopyTo(FileIO.OpenWrite(filename));
                 await this._context.SaveChangesAsync();
                 return this.RedirectToAction(nameof(Index));
             }

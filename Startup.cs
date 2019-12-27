@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using ModBrowser.Data;
 using ModBrowser.Models;
 using ModBrowser.Services;
+using System.IO;
 
 namespace ModBrowser
 {
@@ -22,11 +24,12 @@ namespace ModBrowser
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=.\\wwwroot\\sqlite.db"));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=.\\sqlite.db"));
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSingleton<IHostedService, SyncService>();
             services.AddControllersWithViews();
+            services.AddDirectoryBrowser();
             services.AddRazorPages();
         }
 
@@ -51,6 +54,12 @@ namespace ModBrowser
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods")),
+                RequestPath = "/direct"
+            });
 
             app.UseEndpoints(endpoints =>
             {
