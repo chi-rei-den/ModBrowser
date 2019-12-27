@@ -179,12 +179,12 @@ namespace ModBrowser.Controllers
                 this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Update {mod.DisplayName} ({mod.Name})");
                 try
                 {
-                    var filename = $"./mods/{mod.Name}.tmod";
+                    var filename = mod.FilePath();
                     if (FileIO.Exists(filename))
                     {
                         FileIO.Delete(filename);
                     }
-                    mod.File.CopyTo(FileIO.OpenWrite($"./mods/{mod.Name}.tmod"));
+                    mod.File.CopyTo(FileIO.OpenWrite(filename));
                     this._context.Update(existing);
                     await this._context.SaveChangesAsync();
                 }
