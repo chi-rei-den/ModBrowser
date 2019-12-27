@@ -33,10 +33,6 @@ namespace ModBrowser.Services
             {
                 Directory.CreateDirectory("mods");
             }
-            if (1 < int.Parse("10"))
-            {
-                return;
-            }
             while (true)
             {
                 string str;
@@ -108,27 +104,23 @@ namespace ModBrowser.Services
                         {
                             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                             var found = db.Mod.Find(item.Name);
-                            if (found == null)
+                            item.ModLoaderVersion = item.ModLoaderVersion ?? found.ModLoaderVersion;
+                            if (found?.Version != item.Version)
                             {
                                 var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
                                 File.WriteAllBytes($"./mods/{item.Name}.tmod", result);
                                 ExtractInfo(result, item);
+                            }
+                            if (found == null)
+                            {
                                 db.Mod.Add(item);
-                                db.SaveChanges();
                             }
                             else
                             {
-                                item.ModLoaderVersion = item.ModLoaderVersion ?? found.ModLoaderVersion;
-                                if (found.Version != item.Version)
-                                {
-                                    var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
-                                    File.WriteAllBytes($"./mods/{item.Name}.tmod", result);
-                                    ExtractInfo(result, item);
-                                }
                                 db.Entry(found).CurrentValues.SetValues(item);
                                 db.Mod.Update(found);
-                                db.SaveChanges();
                             }
+                            db.SaveChanges();
                         }
                     }
                     catch
