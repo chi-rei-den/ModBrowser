@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ModBrowser.Data;
@@ -15,10 +16,12 @@ namespace ModBrowser.Controllers
     public class ModsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ModsController(ApplicationDbContext context)
+        public ModsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             this._context = context;
+            this._userManager = userManager;
         }
 
         // GET: Mods
@@ -108,9 +111,10 @@ namespace ModBrowser.Controllers
                     return this.Conflict();
                 }
 
-                if (!mod.Author.Split(", ").Contains(this.User.FindFirstValue(ClaimTypes.Name)))
+                var user = await this._userManager.GetUserAsync(this.User);
+                if (!mod.Author.Split(", ").Contains(user.AuthorName))
                 {
-                    mod.Author += ", " + this.User.FindFirstValue(ClaimTypes.Name);
+                    mod.Author += ", " + user.AuthorName;
                 }
 
                 var entry = new Mod();
@@ -155,7 +159,8 @@ namespace ModBrowser.Controllers
             if (this.ModelState.IsValid)
             {
                 var existing = this._context.Mod.Find(id);
-                if (!existing.Author.Split(", ").Contains(this.User.FindFirstValue(ClaimTypes.Name)))
+                var user = await this._userManager.GetUserAsync(this.User);
+                if (!existing.Author.Split(", ").Contains(user.AuthorName))
                 {
                     return this.Forbid();
                 }
@@ -207,7 +212,8 @@ namespace ModBrowser.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var mod = await this._context.Mod.FindAsync(id);
-            if (!mod.Author.Split(", ").Contains(this.User.FindFirstValue(ClaimTypes.Name)))
+            var user = await this._userManager.GetUserAsync(this.User);
+            if (!mod.Author.Split(", ").Contains(user.AuthorName))
             {
                 return this.Forbid();
             }
