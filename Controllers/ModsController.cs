@@ -30,7 +30,6 @@ namespace ModBrowser.Controllers
         // GET: Mods
         public IActionResult Index(string by, bool order, string search)
         {
-            this.ViewData["Domain"] = $"{this.Request.Scheme}://{this.Request.Host}/";
             IEnumerable<Mod> result = this._context.Mod;
 
             if (!string.IsNullOrWhiteSpace(search))
