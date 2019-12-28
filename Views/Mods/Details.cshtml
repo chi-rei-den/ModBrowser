@@ -62,7 +62,7 @@
             @Html.DisplayNameFor(model => model.IconURL)
         </dt>
         <dd class="col-sm-10">
-            <img src="@Html.DisplayFor(model => model.IconURL)" />
+            <img src="direct/@(Html.DisplayFor(model => model.Name)).png" alt="@Html.DisplayFor(model => model.IconURL)" />
             <a href="@Html.DisplayFor(model => model.IconURL)">@Html.DisplayFor(model => model.IconURL)</a>
         </dd>
         <dt class = "col-sm-2">

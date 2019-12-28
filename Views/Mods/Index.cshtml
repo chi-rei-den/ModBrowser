@@ -47,10 +47,10 @@
                 <br />
                 @Html.DisplayFor(modelItem => item.Name)
                 <br />
-                <img src="@Html.DisplayFor(modelItem => item.IconURL)" />
+                <img src="direct/@(Html.DisplayFor(modelItem => item.Name)).png" alt="@Html.DisplayFor(modelItem => item.IconURL)" />
             </td>
             <td>
-                <a href="@ViewData["Domain"]tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">Download @Html.DisplayFor(modelItem => item.Version)</a>
+                <a href="tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">Download @Html.DisplayFor(modelItem => item.Version)</a>
             </td>
             <td>
                 @if (item.Author.Length > 25)
