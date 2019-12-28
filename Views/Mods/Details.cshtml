@@ -44,7 +44,7 @@
             @Html.DisplayNameFor(model => model.ModLoaderVersion)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModLoaderVersion)
+            @Html.Raw(Model.ModLoaderVersion.Substring(11))
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ModReferences)
@@ -62,8 +62,11 @@
             @Html.DisplayNameFor(model => model.IconURL)
         </dt>
         <dd class="col-sm-10">
-            <img src="direct/@(Html.DisplayFor(model => model.Name)).png" alt="@Html.DisplayFor(model => model.IconURL)" />
-            <a href="@Html.DisplayFor(model => model.IconURL)">@Html.DisplayFor(model => model.IconURL)</a>
+            @if (!string.IsNullOrWhiteSpace(Model.IconURL))
+            {
+                <img src="direct/@(Html.DisplayFor(model => model.Name)).png" alt="@Html.DisplayFor(model => model.IconURL)" />
+                <a href="@Html.DisplayFor(model => model.IconURL)">@Html.DisplayFor(model => model.IconURL)</a>
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ModSide)
