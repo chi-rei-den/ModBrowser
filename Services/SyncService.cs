@@ -134,13 +134,9 @@ namespace ModBrowser.Services
                                 File.WriteAllBytes(item.FilePath(), result);
                                 File.SetLastWriteTimeUtc(item.FilePath(), item.GetUpdateTimestamp());
                                 ExtractInfo(result, item);
-                                item.Size = (int)new FileInfo(item.FilePath()).Length;
                             }
 
-                            if (found?.Size == 0)
-                            {
-                                item.Size = (int)new FileInfo(item.FilePath()).Length;
-                            }
+                            item.Size = (int)new FileInfo(item.FilePath()).Length;
 
                             if (mayNeedIcon && !string.IsNullOrWhiteSpace(item.IconURL))
                             {
