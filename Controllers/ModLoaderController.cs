@@ -114,7 +114,8 @@ namespace ModBrowser.Controllers
                     update = new
                     {
                         message = "An update to tModLoader is available.",
-                        url = "https://github.com/tModLoader/tModLoader/releases"
+                        url = "https://github.com/tModLoader/tModLoader/releases",
+                        current = clientVersion.ToString()
                     },
                     modlist
                 }, Formatting.None, new JsonSerializerSettings
@@ -143,20 +144,20 @@ namespace ModBrowser.Controllers
                     }
                 }
 
-                return clientVersion == SyncService.tModLoaderVersion
-                    ? this.Json(new
+                return this.Content(JsonConvert.SerializeObject(
+                    new
                     {
-                        modlist_compressed = modlist
-                    })
-                    : this.Json(new
-                    {
-                        update = new
+                        update = clientVersion == SyncService.tModLoaderVersion
+                        ? null : new
                         {
                             message = "An update to tModLoader is available.",
                             url = "https://github.com/tModLoader/tModLoader/releases"
                         },
-                        modlist_compressed = modlist
-                    });
+                        modlist_compressed = encoded
+                    }, Formatting.None, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    }), MediaTypeNames.Application.Json);
             }
         }
 
