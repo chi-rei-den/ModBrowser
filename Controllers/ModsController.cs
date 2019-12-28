@@ -111,13 +111,14 @@ namespace ModBrowser.Controllers
                 this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Create {mod.DisplayName} ({mod.Name})");
                 var entry = new Mod();
                 this._context.Entry(entry).CurrentValues.SetValues(mod);
-                this._context.Add(entry);
                 var filename = mod.FilePath();
                 if (FileIO.Exists(filename))
                 {
                     FileIO.Delete(filename);
                 }
                 mod.File.CopyTo(FileIO.OpenWrite(filename));
+                entry.Size = (int)new System.IO.FileInfo(entry.FilePath()).Length;
+                this._context.Add(entry);
                 await this._context.SaveChangesAsync();
                 return this.RedirectToAction(nameof(Index));
             }
@@ -178,6 +179,7 @@ namespace ModBrowser.Controllers
                         FileIO.Delete(filename);
                     }
                     mod.File.CopyTo(FileIO.OpenWrite(filename));
+                    existing.Size = (int)new System.IO.FileInfo(existing.FilePath()).Length;
                     this._context.Update(existing);
                     await this._context.SaveChangesAsync();
                 }

@@ -124,16 +124,6 @@ namespace ModBrowser.Services
                             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                             var found = db.Mod.Find(item.Name);
                             item.ModLoaderVersion ??= found?.ModLoaderVersion;
-                            if (found == null)
-                            {
-                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) created.");
-                                db.Mod.Add(item);
-                            }
-                            else
-                            {
-                                db.Entry(found).CurrentValues.SetValues(item);
-                                db.Mod.Update(found);
-                            }
 
                             var mayNeedIcon = !File.Exists(item.IconPath());
                             if (found?.Version != item.Version)
@@ -144,6 +134,12 @@ namespace ModBrowser.Services
                                 File.WriteAllBytes(item.FilePath(), result);
                                 File.SetLastWriteTimeUtc(item.FilePath(), item.GetUpdateTimestamp());
                                 ExtractInfo(result, item);
+                                item.Size = (int)new FileInfo(item.FilePath()).Length;
+                            }
+
+                            if (found?.Size == 0)
+                            {
+                                item.Size = (int)new FileInfo(item.FilePath()).Length;
                             }
 
                             if (mayNeedIcon && !string.IsNullOrWhiteSpace(item.IconURL))
@@ -151,6 +147,17 @@ namespace ModBrowser.Services
                                 var result = await Http.GetByteArrayAsync(item.IconURL);
                                 File.WriteAllBytes(item.IconPath(), result);
                                 File.SetLastWriteTimeUtc(item.IconPath(), item.GetUpdateTimestamp());
+                            }
+
+                            if (found == null)
+                            {
+                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) created.");
+                                db.Mod.Add(item);
+                            }
+                            else
+                            {
+                                db.Entry(found).CurrentValues.SetValues(item);
+                                db.Mod.Update(found);
                             }
 
                             db.SaveChanges();

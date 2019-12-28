@@ -48,6 +48,9 @@ namespace ModBrowser.Models
         [JsonProperty("hot")]
         public int Hot { get; set; }
 
+        [JsonProperty("size")]
+        public int Size { get; set; }
+
         public Mod Clone() => (Mod)this.MemberwiseClone();
     }
 
