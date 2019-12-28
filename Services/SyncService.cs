@@ -135,10 +135,10 @@ namespace ModBrowser.Services
                                 db.Mod.Update(found);
                             }
 
-                            var updateIcon = !string.IsNullOrWhiteSpace(item.IconURL) && !File.Exists(item.IconPath());
+                            var mayNeedIcon = !File.Exists(item.IconPath());
                             if (found?.Version != item.Version)
                             {
-                                updateIcon = true;
+                                mayNeedIcon = true;
                                 this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}");
                                 var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
                                 File.WriteAllBytes(item.FilePath(), result);
@@ -146,7 +146,7 @@ namespace ModBrowser.Services
                                 ExtractInfo(result, item);
                             }
 
-                            if (updateIcon)
+                            if (mayNeedIcon && !string.IsNullOrWhiteSpace(item.IconURL))
                             {
                                 var result = await Http.GetByteArrayAsync(item.IconURL);
                                 File.WriteAllBytes(item.IconPath(), result);

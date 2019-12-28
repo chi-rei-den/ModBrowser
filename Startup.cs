@@ -96,7 +96,7 @@ namespace ModBrowser
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Mods}/{action=Index}/{id?}");
                 endpoints.MapControllerRoute(
                     name: "tModLoaderDownload",
                     pattern: "tModLoader/download.php",
