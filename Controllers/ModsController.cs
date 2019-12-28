@@ -28,8 +28,18 @@ namespace ModBrowser.Controllers
         }
 
         // GET: Mods
-        public IActionResult Index(string by, bool order, string search)
+        public IActionResult Index(string by, bool order, string search, string filter, int? page)
         {
+            if (!string.IsNullOrWhiteSpace(search) || page == null)
+            {
+                page = 1;
+            }
+
+            this.ViewData["by"] = by;
+            this.ViewData["order"] = order;
+            this.ViewData["search"] = search ?? filter;
+            this.ViewData["page"] = page;
+
             IEnumerable<Mod> result = this._context.Mod;
 
             if (!string.IsNullOrWhiteSpace(search))
@@ -49,13 +59,12 @@ namespace ModBrowser.Controllers
                 _ => result.OrderBy(r => r.GetUpdateTimestamp()),
             };
 
-            this.ViewData["Order"] = !order;
-            if (Convert.ToBoolean(this.ViewData["Order"]))
+            if (order)
             {
                 result = result.Reverse();
             }
 
-            return this.View(result.ToList());
+            return this.View(result.ToPaginated(page.Value, 20).ToList());
         }
 
         // GET: Mods/Details/5

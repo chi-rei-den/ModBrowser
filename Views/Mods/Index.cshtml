@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ModBrowser.Models.Mod>
+﻿@model List<ModBrowser.Models.Mod>
 
 @{
     ViewData["Title"] = "Index";
@@ -11,86 +11,96 @@
 </p>
 @using (Html.BeginForm())
 {
-    <p>
-        Find by name: @Html.TextBox("Search")
-        <input type="submit" value="Search" />
-    </p>
+    <div class="form-actions no-color">
+        <p>
+            Find by name: <input type="text" name="Search" value="@ViewData["search"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
 }
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.DisplayName), "Index", new { by = "n", order = ViewData["Order"] })
+                @Html.ActionLink(Html.DisplayNameFor(model => model[0].DisplayName), "Index", new { by = "n", order = !(bool)ViewData["order"], filter = ViewData["search"] })
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Version), "Index", new { by = "v", order = ViewData["Order"] })
+                @Html.ActionLink(Html.DisplayNameFor(model => model[0].Version), "Index", new { by = "v", order = !(bool)ViewData["order"], filter = ViewData["search"] })
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.Author), "Index", new { by = "a", order = ViewData["Order"] })
+                @Html.ActionLink(Html.DisplayNameFor(model => model[0].Author), "Index", new { by = "a", order = !(bool)ViewData["order"], filter = ViewData["search"] })
             </th>
             <th />
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.UpdateTimeStamp), "Index", new { by = "u", order = ViewData["Order"] })
+                @Html.ActionLink(Html.DisplayNameFor(model => model[0].UpdateTimeStamp), "Index", new { by = "u", order = !(bool)ViewData["order"], filter = ViewData["search"] })
             </th>
             <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model.ModLoaderVersion), "Index", new { by = "m", order = ViewData["Order"] })
+                @Html.ActionLink(Html.DisplayNameFor(model => model[0].ModLoaderVersion), "Index", new { by = "m", order = !(bool)ViewData["order"], filter = ViewData["search"] })
             </th>
-            <th>@Html.ActionLink("Downloads", "Index", new { by = "d", order = ViewData["Order"] }) | @Html.ActionLink("Hot", "Index", new { by = "h", order = ViewData["Order"] })</th>
+            <th>
+                @Html.ActionLink(Html.DisplayNameFor(model => model[0].Downloads), "Index", new { by = "d", order = !(bool)ViewData["order"], filter = ViewData["search"] }) |
+                @Html.ActionLink(Html.DisplayNameFor(model => model[0].Hot), "Index", new { by = "h", order =!(bool)ViewData["order"], filter = ViewData["search"] })
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DisplayName)
-                <br />
-                @Html.DisplayFor(modelItem => item.Name)
-                @if (!string.IsNullOrWhiteSpace(item.IconURL))
-                {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DisplayName)
                     <br />
-                    <img src="direct/@(Html.DisplayFor(modelItem => item.Name)).png" alt="@Html.DisplayFor(modelItem => item.IconURL)" />
-                }
-            </td>
-            <td>
-                <a href="tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">Download @Html.DisplayFor(modelItem => item.Version)</a>
-            </td>
-            <td>
-                @if (item.Author.Length > 25)
-                {
-                    @Html.Raw(item.Author.Substring(0, 20) + " ...")
-                }
-                else
-                {
-                    @Html.DisplayFor(modelItem => item.Author)
-                }
-            </td>
-            <td>
-                @if (!string.IsNullOrWhiteSpace(item.Homepage))
-                {
-                    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#home_@Html.DisplayFor(modelItem => item.Name)">Homepage</button>
-                    <div id="home_@Html.DisplayFor(modelItem => item.Name)" class="collapse">
-                        <a href="@Html.DisplayFor(modelItem => item.Homepage)">@Html.DisplayFor(modelItem => item.Homepage)</a>
-                    </div>
-                }
-                @if (!string.IsNullOrWhiteSpace(item.Description))
-                {
-                    <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#desc_@Html.DisplayFor(modelItem => item.Name)">Description</button>
-                    <div id="desc_@Html.DisplayFor(modelItem => item.Name)" class="collapse">
-                        @Html.Raw(item.Description.Replace("\r\n", "<br />"))
-                    </div>
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdateTimeStamp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModLoaderVersion)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Name">Edit</a> | <a asp-action="Details" asp-route-id="@item.Name">Details</a> | <a asp-action="Delete" asp-route-id="@item.Name">Delete</a>
-            </td>
-        </tr>
+                    @Html.DisplayFor(modelItem => item.Name)
+                    @if (!string.IsNullOrWhiteSpace(item.IconURL))
+                    {
+                        <br />
+                        <img src="direct/@(Html.DisplayFor(modelItem => item.Name)).png" alt="@Html.DisplayFor(modelItem => item.IconURL)" />
+                    }
+                </td>
+                <td>
+                    <a href="tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">Download @Html.DisplayFor(modelItem => item.Version)</a>
+                </td>
+                <td>
+                    @if (item.Author.Length > 25)
+                    {
+                        @Html.Raw(item.Author.Substring(0, 20) + " ...")
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.Author)
+                    }
+                </td>
+                <td>
+                    @if (!string.IsNullOrWhiteSpace(item.Homepage))
+                    {
+                        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#home_@Html.DisplayFor(modelItem => item.Name)">Homepage</button>
+                        <div id="home_@Html.DisplayFor(modelItem => item.Name)" class="collapse">
+                            <a href="@Html.DisplayFor(modelItem => item.Homepage)">@Html.DisplayFor(modelItem => item.Homepage)</a>
+                        </div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(item.Description))
+                    {
+                        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#desc_@Html.DisplayFor(modelItem => item.Name)">Description</button>
+                        <div id="desc_@Html.DisplayFor(modelItem => item.Name)" class="collapse">
+                            @Html.Raw(item.Description.Replace("\r\n", "<br />"))
+                        </div>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateTimeStamp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModLoaderVersion)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Name">Edit</a> | <a asp-action="Details" asp-route-id="@item.Name">Details</a> | <a asp-action="Delete" asp-route-id="@item.Name">Delete</a>
+                </td>
+            </tr>
         }
     </tbody>
 </table>
+@Html.ActionLink("<<", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] - 5, order = (bool)ViewData["order"], filter = ViewData["search"] })
+@Html.ActionLink("<", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] - 1, order = (bool)ViewData["order"], filter = ViewData["search"] })
+@Html.ActionLink(">", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] + 1, order = (bool)ViewData["order"], filter = ViewData["search"] })
+@Html.ActionLink(">>", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] + 5, order = (bool)ViewData["order"], filter = ViewData["search"] })
