@@ -134,7 +134,7 @@ namespace ModBrowser.Controllers
             var track = this._context.Entry(m);
             track.CurrentValues.SetValues(mod);
             track.State = EntityState.Detached;
-            return this.View(mod);
+            return this.View(m);
         }
 
         // POST: Mods/Edit/5
