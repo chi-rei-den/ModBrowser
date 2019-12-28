@@ -58,7 +58,7 @@
             <td>
                 @if (item.Author.Length > 25)
                 {
-                    @Html.Raw(item.Author.Substring(20) + " ...")
+                    @Html.Raw(item.Author.Substring(0, 20) + " ...")
                 }
                 else
                 {
