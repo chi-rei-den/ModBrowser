@@ -37,7 +37,7 @@ namespace ModBrowser.Controllers
 
             this.ViewData["by"] = by;
             this.ViewData["order"] = order;
-            this.ViewData["search"] = search ?? filter;
+            this.ViewData["search"] = search ??= filter;
             this.ViewData["page"] = page;
 
             IEnumerable<Mod> result = this._context.Mod;
@@ -56,6 +56,7 @@ namespace ModBrowser.Controllers
                 "a" => result.OrderBy(r => r.Author),
                 "d" => result.OrderBy(r => r.Downloads),
                 "h" => result.OrderBy(r => r.Hot),
+                "s" => result.OrderBy(r => r.Size),
                 _ => result.OrderBy(r => r.GetUpdateTimestamp()),
             };
 
