@@ -46,8 +46,11 @@
                 @Html.DisplayFor(modelItem => item.DisplayName)
                 <br />
                 @Html.DisplayFor(modelItem => item.Name)
-                <br />
-                <img src="direct/@(Html.DisplayFor(modelItem => item.Name)).png" alt="@Html.DisplayFor(modelItem => item.IconURL)" />
+                @if (!string.IsNullOrWhiteSpace(item.IconURL))
+                {
+                    <br />
+                    <img src="direct/@(Html.DisplayFor(modelItem => item.Name)).png" alt="@Html.DisplayFor(modelItem => item.IconURL)" />
+                }
             </td>
             <td>
                 <a href="tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">Download @Html.DisplayFor(modelItem => item.Version)</a>
