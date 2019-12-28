@@ -106,7 +106,4 @@
         }
     </tbody>
 </table>
-@Html.ActionLink("<<", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] - 5, order = (bool)ViewData["order"], filter = ViewData["search"] })
-@Html.ActionLink("<", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] - 1, order = (bool)ViewData["order"], filter = ViewData["search"] })
-@Html.ActionLink(">", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] + 1, order = (bool)ViewData["order"], filter = ViewData["search"] })
-@Html.ActionLink(">>", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] + 5, order = (bool)ViewData["order"], filter = ViewData["search"] })
+@Html.ActionLink("<<", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] - 5, order = (bool)ViewData["order"], filter = ViewData["search"] }) | @Html.ActionLink("<", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] - 1, order = (bool)ViewData["order"], filter = ViewData["search"] }) | @Html.ActionLink(">", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] + 1, order = (bool)ViewData["order"], filter = ViewData["search"] }) | @Html.ActionLink(">>", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] + 5, order = (bool)ViewData["order"], filter = ViewData["search"] })
