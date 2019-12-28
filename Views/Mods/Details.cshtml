@@ -64,7 +64,7 @@
         <dd class="col-sm-10">
             @if (!string.IsNullOrWhiteSpace(Model.IconURL))
             {
-                <img src="direct/@(Html.DisplayFor(model => model.Name)).png" alt="@Html.DisplayFor(model => model.IconURL)" />
+                <img src="/direct/@(Html.DisplayFor(model => model.Name)).png" alt="@Html.DisplayFor(model => model.IconURL)" />
                 <a href="@Html.DisplayFor(model => model.IconURL)">@Html.DisplayFor(model => model.IconURL)</a>
             }
         </dd>
