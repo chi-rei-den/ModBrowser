@@ -53,7 +53,14 @@
                 <a href="@ViewData["Domain"]tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">Download @Html.DisplayFor(modelItem => item.Version)</a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Author)
+                @if (item.Author.Length > 25)
+                {
+                    @Html.Raw(item.Author.Substring(20) + " ...")
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.Author)
+                }
             </td>
             <td>
                 @if (!string.IsNullOrWhiteSpace(item.Homepage))
@@ -67,7 +74,7 @@
                 {
                     <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#desc_@Html.DisplayFor(modelItem => item.Name)">Description</button>
                     <div id="desc_@Html.DisplayFor(modelItem => item.Name)" class="collapse">
-                        @item.Description.Replace("\r\n", "<br />")
+                        @Html.Raw(item.Description.Replace("\r\n", "<br />"))
                     </div>
                 }
             </td>
