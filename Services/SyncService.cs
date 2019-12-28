@@ -132,14 +132,24 @@ namespace ModBrowser.Services
                                 db.Mod.Update(found);
                             }
 
+                            var updateIcon = !string.IsNullOrWhiteSpace(item.IconURL) && !File.Exists(item.IconPath());
                             if (found?.Version != item.Version)
                             {
+                                updateIcon = true;
                                 this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}");
                                 var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
                                 File.WriteAllBytes(item.FilePath(), result);
                                 File.SetLastWriteTimeUtc(item.FilePath(), item.GetUpdateTimestamp());
                                 ExtractInfo(result, item);
                             }
+
+                            if (updateIcon)
+                            {
+                                var result = await Http.GetByteArrayAsync(item.IconURL);
+                                File.WriteAllBytes(item.IconPath(), result);
+                                File.SetLastWriteTimeUtc(item.IconPath(), item.GetUpdateTimestamp());
+                            }
+
                             db.SaveChanges();
                         }
                     }

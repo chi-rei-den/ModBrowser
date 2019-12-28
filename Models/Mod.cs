@@ -47,6 +47,8 @@ namespace ModBrowser.Models
 
         [JsonProperty("hot")]
         public int Hot { get; set; }
+
+        public Mod Clone() => (Mod)this.MemberwiseClone();
     }
 
     public static class ModHelper
@@ -60,5 +62,7 @@ namespace ModBrowser.Models
         public static string FilePath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".tmod");
 
         public static string FilePath(this ModVM mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".tmod");
+
+        public static string IconPath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".png");
     }
 }

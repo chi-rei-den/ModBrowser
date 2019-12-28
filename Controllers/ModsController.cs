@@ -32,39 +32,23 @@ namespace ModBrowser.Controllers
         {
             this.ViewData["Domain"] = $"{this.Request.Scheme}://{this.Request.Host}/";
             IEnumerable<Mod> result = this._context.Mod;
+            search = search.ToLower();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
-                result = result.Where(r => r.Name.Contains(search));
+                result = result.Where(r => r.Name.ToLower().Contains(search));
             }
 
-            switch (by)
+            result = by switch
             {
-                case "v":
-                    result = result.OrderBy(r => r.Version);
-                    break;
-                case "m":
-                    result = result.OrderBy(r => r.GetModLoaderVersion());
-                    break;
-                case "n":
-                    result = result.OrderBy(r => r.Name);
-                    break;
-                case "u":
-                    result = result.OrderBy(r => r.GetUpdateTimestamp());
-                    break;
-                case "a":
-                    result = result.OrderBy(r => r.Author);
-                    break;
-                case "d":
-                    result = result.OrderBy(r => r.Downloads);
-                    break;
-                case "h":
-                    result = result.OrderBy(r => r.Hot);
-                    break;
-                default:
-                    result = result.OrderBy(r => r.GetUpdateTimestamp());
-                    break;
-            }
+                "v" => result.OrderBy(r => r.Version),
+                "m" => result.OrderBy(r => r.GetModLoaderVersion()),
+                "n" => result.OrderBy(r => r.Name),
+                "a" => result.OrderBy(r => r.Author),
+                "d" => result.OrderBy(r => r.Downloads),
+                "h" => result.OrderBy(r => r.Hot),
+                _ => result.OrderBy(r => r.GetUpdateTimestamp()),
+            };
 
             this.ViewData["Order"] = !order;
             if (Convert.ToBoolean(this.ViewData["Order"]))
