@@ -32,10 +32,10 @@ namespace ModBrowser.Controllers
         {
             this.ViewData["Domain"] = $"{this.Request.Scheme}://{this.Request.Host}/";
             IEnumerable<Mod> result = this._context.Mod;
-            search = search.ToLower();
 
             if (!string.IsNullOrWhiteSpace(search))
             {
+                search = search.ToLower();
                 result = result.Where(r => r.Name.ToLower().Contains(search));
             }
 

@@ -109,7 +109,7 @@ namespace ModBrowser.Controllers
 
             if (clientVersion <= new Version(0, 11) || !string.IsNullOrWhiteSpace(uncompressed))
             {
-                return this.Json(new
+                return this.Content(JsonConvert.SerializeObject(new
                 {
                     update = new
                     {
@@ -117,7 +117,10 @@ namespace ModBrowser.Controllers
                         url = "https://github.com/tModLoader/tModLoader/releases"
                     },
                     modlist
-                });
+                }, Formatting.None, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                }), MediaTypeNames.Application.Json);
             }
             else
             {
