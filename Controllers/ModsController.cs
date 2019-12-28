@@ -62,7 +62,7 @@ namespace ModBrowser.Controllers
                     result = result.OrderBy(r => r.Hot);
                     break;
                 default:
-                    result = result.OrderByDescending(r => r.GetUpdateTimestamp());
+                    result = result.OrderBy(r => r.GetUpdateTimestamp());
                     break;
             }
 

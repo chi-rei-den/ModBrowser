@@ -27,19 +27,19 @@ namespace ModBrowser.Models
         [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonProperty("modloaderversion")]
+        [JsonProperty("modloaderversion"), DisplayName("tModLoader Version")]
         public string ModLoaderVersion { get; set; }
 
-        [JsonProperty("modreferences")]
+        [JsonProperty("modreferences"), DisplayName("Mod References")]
         public string ModReferences { get; set; } = "";
 
         [JsonProperty("homepage")]
         public string Homepage { get; set; }
 
-        [JsonProperty("iconurl")]
+        [JsonProperty("iconurl"), DisplayName("Icon")]
         public string IconURL { get; set; }
 
-        [JsonProperty("modside")]
+        [JsonProperty("modside"), DisplayName("Mod Side")]
         public string ModSide { get; set; } = "Both";
 
         [JsonProperty("downloads")]
