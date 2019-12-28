@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +10,8 @@ using ModBrowser.Data;
 using ModBrowser.Models;
 using ModBrowser.Services;
 using System.IO;
+using System.Linq;
+using System.Net.Mime;
 
 namespace ModBrowser
 {
@@ -61,11 +64,30 @@ namespace ModBrowser
                 Directory.CreateDirectory(modsFolder);
             }
 
-            app.UseFileServer(new FileServerOptions
+            app.UseStaticFiles();
+
+            var provider = new FileExtensionContentTypeProvider();
+            var list = provider.Mappings.Keys.ToList();
+            for (var i = 0; i < list.Count; i++)
+            {
+                provider.Mappings.Remove(list[i]);
+            }
+
+            provider.Mappings[".tmod"] = MediaTypeNames.Application.Octet;
+            provider.Mappings[".png"] = "image/png";
+
+            app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(modsFolder),
                 RequestPath = "/direct",
-                EnableDirectoryBrowsing = true
+                ContentTypeProvider = provider,
+                OnPrepareResponse = ctx => ctx.Context.Response.Headers.Add("Cache-Control", "public, max-age=7200")
+            });
+
+            app.UseDirectoryBrowser(new DirectoryBrowserOptions
+            {
+                FileProvider = new PhysicalFileProvider(modsFolder),
+                RequestPath = "/direct"
             });
 
             app.UseEndpoints(endpoints =>

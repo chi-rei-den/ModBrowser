@@ -87,18 +87,24 @@ namespace ModBrowser.Controllers
         }
 
         [HttpGet, HttpPost]
-        public IActionResult ModListing(string modloaderversion, string platform, string netversion, string uncompressed)
+        public IActionResult ModListing(string modloaderversion, string platform, string netversion, string uncompressed, string preserveicon)
         {
             var clientVersion = new Version(!string.IsNullOrWhiteSpace(modloaderversion) && modloaderversion.Length > 12
                 ? modloaderversion.Substring(12)
                 : "0.0.0.0");
+            var mirrorIcon = string.IsNullOrWhiteSpace(preserveicon);
             var modlist = this._context.Mod.AsEnumerable().Select((m) =>
             {
-                if (m.GetModLoaderVersion() <= clientVersion)
+                var cloned = m.Clone();
+                if (cloned.GetModLoaderVersion() <= clientVersion)
                 {
-                    m.ModLoaderVersion = null;
+                    cloned.ModLoaderVersion = null;
                 }
-                return m;
+                if (mirrorIcon)
+                {
+                    cloned.IconURL = System.IO.File.Exists(cloned.IconPath()) ? $"{this.Request.Scheme}://{this.Request.Host}/direct/{cloned.Name}.png" : null;
+                }
+                return cloned;
             });
 
             if (clientVersion <= new Version(0, 11) || !string.IsNullOrWhiteSpace(uncompressed))
