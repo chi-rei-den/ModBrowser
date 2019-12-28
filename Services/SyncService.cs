@@ -37,6 +37,9 @@ namespace ModBrowser.Services
             {
                 Directory.CreateDirectory("mods");
             }
+
+            await Task.Delay(TimeSpan.FromSeconds(15));
+
             while (true)
             {
                 string str;
