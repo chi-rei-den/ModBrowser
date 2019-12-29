@@ -1,89 +1,107 @@
 ﻿@model ModBrowser.Models.Mod
+@using Humanizer;
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+<h1>Details of @Html.Raw(Model.DisplayName)</h1>
 
 <div>
-    <h4>Mod</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DisplayName)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DisplayName)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Version)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Version)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Author)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Author)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UpdateTimeStamp)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UpdateTimeStamp)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.Raw(Model.Description.Replace("\r\n", "<br />"))
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModLoaderVersion)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.Raw(Model.ModLoaderVersion.Substring(11))
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModReferences)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModReferences)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Homepage)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
         </dt>
         <dd class="col-sm-10">
-            <a href="@Html.DisplayFor(model => model.Homepage)">@Html.DisplayFor(model => model.Homepage)</a>
+            @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.IconURL)
+            @Html.DisplayNameFor(model => model.Version)
         </dt>
         <dd class="col-sm-10">
-            @if (!string.IsNullOrWhiteSpace(Model.IconURL))
-            {
-                <img src="/direct/@(Html.DisplayFor(model => model.Name)).png" alt="@Html.DisplayFor(model => model.IconURL)" />
-                <a href="@Html.DisplayFor(model => model.IconURL)">@Html.DisplayFor(model => model.IconURL)</a>
-            }
+            @Html.DisplayFor(model => model.Version)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Author)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Author)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.UpdateTimeStamp)
+        </dt>
+        <dd class="col-sm-10">
+            <span title="@Html.DisplayFor(model => model.UpdateTimeStamp)">@Html.Raw(Model.GetUpdateTimestamp().Humanize())</span>
+        </dd>
+        @if (!string.IsNullOrWhiteSpace(Model.Description))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.Raw(Model.Description.Replace("\r\n", "<br />"))
+            </dd>
+        }
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ModLoaderVersion)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.Raw(Model.ModLoaderVersion.Substring(11))
+        </dd>
+        @if (!string.IsNullOrWhiteSpace(Model.ModReferences))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ModReferences)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ModReferences)
+            </dd>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.Homepage))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Homepage)
+            </dt>
+            <dd class="col-sm-10">
+                <a href="@Html.DisplayFor(model => model.Homepage)">@Html.DisplayFor(model => model.Homepage)</a>
+            </dd>
+        }
+        @if (!string.IsNullOrWhiteSpace(Model.IconURL))
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.IconURL)
+            </dt>
+            <dd class="col-sm-10">
+                @if (!string.IsNullOrWhiteSpace(Model.IconURL))
+                {
+                    <img src="/direct/@(Html.DisplayFor(model => model.Name)).png" alt="@Html.DisplayFor(model => model.IconURL)" />
+                    <a href="@Html.DisplayFor(model => model.IconURL)">@Html.DisplayFor(model => model.IconURL)</a>
+                }
+            </dd>
+        }
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.ModSide)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.ModSide)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Downloads)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Downloads)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Hot)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Hot)
         </dd>
     </dl>

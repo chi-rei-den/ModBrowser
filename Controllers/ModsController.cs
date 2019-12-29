@@ -28,7 +28,7 @@ namespace ModBrowser.Controllers
         }
 
         // GET: Mods
-        public IActionResult Index(string by, bool order, string search, string filter, int? page)
+        public IActionResult Index(string by, string order, string search, string filter, int? page)
         {
             if (!string.IsNullOrWhiteSpace(search) || page == null)
             {
@@ -36,7 +36,6 @@ namespace ModBrowser.Controllers
             }
 
             this.ViewData["by"] = by;
-            this.ViewData["order"] = order;
             this.ViewData["search"] = search ??= filter;
             this.ViewData["page"] = page;
 
@@ -52,17 +51,22 @@ namespace ModBrowser.Controllers
             {
                 "v" => result.OrderBy(r => r.Version),
                 "m" => result.OrderBy(r => r.GetModLoaderVersion()),
-                "n" => result.OrderBy(r => r.Name),
-                "a" => result.OrderBy(r => r.Author),
-                "d" => result.OrderBy(r => r.Downloads),
+                "n" => result.OrderByDescending(r => r.Name),
+                "a" => result.OrderByDescending(r => r.Author),
                 "h" => result.OrderBy(r => r.Hot),
                 "s" => result.OrderBy(r => r.Size),
-                _ => result.OrderBy(r => r.GetUpdateTimestamp()),
+                "u" => result.OrderBy(r => r.GetUpdateTimestamp()),
+                _ => result.OrderBy(r => r.Downloads),
             };
 
-            if (order)
+            if (by == order)
+            {
+                this.ViewData["order"] = "";
+            }
+            else
             {
                 result = result.Reverse();
+                this.ViewData["order"] = by;
             }
 
             return this.View(result.ToPaginated(page.Value, 20).ToList());
