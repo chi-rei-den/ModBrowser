@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -146,11 +147,19 @@ namespace ModBrowser.Controllers
                 return this.NotFound();
             }
 
-            var m = new ModVM();
-            var track = this._context.Entry(m);
-            track.CurrentValues.SetValues(mod);
-            track.State = EntityState.Detached;
-            return this.View(m);
+            return this.View(new ModVM
+            {
+                Author = mod.Author,
+                Description = mod.Description,
+                DisplayName = mod.DisplayName,
+                Name = mod.Name,
+                Homepage = mod.Homepage,
+                IconURL = mod.IconURL,
+                ModLoaderVersion = mod.ModLoaderVersion,
+                ModReference = mod.ModReferences,
+                ModSide = EnumDehumanizeExtensions.DehumanizeTo<ModSide>(mod.ModSide),
+                Version = mod.Version
+            });
         }
 
         // POST: Mods/Edit/5
