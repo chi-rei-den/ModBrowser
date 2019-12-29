@@ -56,7 +56,8 @@ namespace ModBrowser.Controllers
                 "h" => result.OrderBy(r => r.Hot),
                 "s" => result.OrderBy(r => r.Size),
                 "u" => result.OrderBy(r => r.GetUpdateTimestamp()),
-                _ => result.OrderBy(r => r.Downloads),
+                "d" => result.OrderBy(r => r.Downloads),
+                _ => result.OrderByDescending(r => r.Downloads),
             };
 
             if (by == order)
