@@ -117,6 +117,8 @@ namespace Chireiden.ModBrowser.Controllers
                 }
 
                 this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Create {mod.DisplayName} ({mod.Name})");
+
+                // TODO: Use info from ModInfo when field is empty
                 var entry = new Mod();
                 this._context.Entry(entry).CurrentValues.SetValues(mod);
                 var filename = mod.FilePath();
@@ -185,6 +187,7 @@ namespace Chireiden.ModBrowser.Controllers
                     return this.Forbid();
                 }
 
+                // TODO: Use info from ModInfo when field is empty
                 existing.Author = mod.Author;
                 existing.Description = mod.Description;
                 existing.DisplayName = mod.DisplayName;
