@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ModBrowser.Models
+namespace Chireiden.ModBrowser.Models
 {
     public class ApplicationUser : IdentityUser
     {

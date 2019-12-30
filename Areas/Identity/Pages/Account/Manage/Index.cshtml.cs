@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ModBrowser.Models;
+using Chireiden.ModBrowser.Models;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
-namespace ModBrowser.Areas.Identity.Pages.Account.Manage
+namespace Chireiden.ModBrowser.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {

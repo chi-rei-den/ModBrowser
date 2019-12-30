@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>aspnet-ModBrowser-6BAAF8AB-C875-4AAD-9F64-991FAA881487</UserSecretsId>
+    <RootNamespace>Chireiden.ModBrowser</RootNamespace>
   </PropertyGroup>
 
 

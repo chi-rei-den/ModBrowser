@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ModBrowser.Models;
+using Chireiden.ModBrowser.Models;
 using System.Linq;
 
-namespace ModBrowser.Data
+namespace Chireiden.ModBrowser.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

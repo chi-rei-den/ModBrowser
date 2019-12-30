@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ModBrowser.Data;
+using Chireiden.ModBrowser.Data;
 
-namespace ModBrowser.Data.Migrations
+namespace Chireiden.ModBrowser.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20191228152555_AddModSize")]

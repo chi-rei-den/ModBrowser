@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
-using ModBrowser.Data;
-using ModBrowser.Models;
+using Chireiden.ModBrowser.Data;
+using Chireiden.ModBrowser.ModLoader;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ModBrowser.ViewModels
+namespace Chireiden.ModBrowser.ViewModels
 {
     public class ModVM : IValidatableObject
     {
@@ -20,10 +20,10 @@ namespace ModBrowser.ViewModels
         public string Version { get; set; }
 
         [Required]
-        public string Author { get; set; } = "";
+        public string Author { get; set; }
 
         [NotMapped]
-        public string[] Authors => this.Author?.Split(", ") ?? new string[0];
+        public string[] Authors => this.Author?.Split(", ");
 
         public string Description { get; set; }
 
@@ -31,17 +31,17 @@ namespace ModBrowser.ViewModels
         public string ModLoaderVersion { get; set; }
 
         [DisplayName("Referencing Mod")]
-        public string ModReference { get; set; } = "";
+        public string ModReference { get; set; }
 
         [NotMapped]
-        public string[] ModReferences => this.ModReference?.Split(", ") ?? new string[0];
+        public string[] ModReferences => this.ModReference?.Split(", ");
 
         public string Homepage { get; set; }
 
         [DisplayName("Icon URL")]
         public string IconURL { get; set; }
 
-        public ModSide ModSide { get; set; } = ModSide.Both;
+        public ModSide ModSide { get; set; }
 
         public IFormFile File { set; get; }
 
@@ -67,13 +67,5 @@ namespace ModBrowser.ViewModels
                 }
             }
         }
-    }
-
-    public enum ModSide
-    {
-        Both,
-        Client,
-        Server,
-        NoSync
     }
 }

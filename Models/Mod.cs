@@ -1,11 +1,11 @@
-﻿using ModBrowser.ViewModels;
+﻿using Chireiden.ModBrowser.ViewModels;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 
-namespace ModBrowser.Models
+namespace Chireiden.ModBrowser.Models
 {
     public class Mod
     {
@@ -31,7 +31,7 @@ namespace ModBrowser.Models
         public string ModLoaderVersion { get; set; }
 
         [JsonProperty("modreferences"), DisplayName("Mod References")]
-        public string ModReferences { get; set; } = "";
+        public string ModReferences { get; set; }
 
         [JsonProperty("homepage")]
         public string Homepage { get; set; }

@@ -1,15 +1,15 @@
 ﻿using Ionic.Zlib;
 using Microsoft.AspNetCore.Mvc;
-using ModBrowser.Data;
-using ModBrowser.Models;
-using ModBrowser.Services;
+using Chireiden.ModBrowser.Data;
+using Chireiden.ModBrowser.Models;
+using Chireiden.ModBrowser.Services;
 using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
 
-namespace ModBrowser.Controllers
+namespace Chireiden.ModBrowser.Controllers
 {
     public class ModLoaderController : Controller
     {

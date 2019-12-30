@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using ModBrowser.Data;
-using ModBrowser.Data.Migrations;
-using ModBrowser.Models;
+using Chireiden.ModBrowser.Data;
+using Chireiden.ModBrowser.Data.Migrations;
+using Chireiden.ModBrowser.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -16,7 +16,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
-namespace ModBrowser.Areas.Identity.Pages.Account
+namespace Chireiden.ModBrowser.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class RegisterModel : PageModel

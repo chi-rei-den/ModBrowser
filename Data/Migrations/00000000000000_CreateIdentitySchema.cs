@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace ModBrowser.Data.Migrations
+namespace Chireiden.ModBrowser.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {

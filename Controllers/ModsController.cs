@@ -4,16 +4,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using ModBrowser.Data;
-using ModBrowser.Models;
-using ModBrowser.ViewModels;
+using Chireiden.ModBrowser.Data;
+using Chireiden.ModBrowser.Models;
+using Chireiden.ModBrowser.ModLoader;
+using Chireiden.ModBrowser.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FileIO = System.IO.File;
 
-namespace ModBrowser.Controllers
+namespace Chireiden.ModBrowser.Controllers
 {
     public class ModsController : Controller
     {
@@ -184,7 +185,16 @@ namespace ModBrowser.Controllers
                     return this.Forbid();
                 }
 
-                this._context.Entry(existing).CurrentValues.SetValues(mod);
+                existing.Author = mod.Author;
+                existing.Description = mod.Description;
+                existing.DisplayName = mod.DisplayName;
+                existing.Name = mod.Name;
+                existing.Homepage = mod.Homepage;
+                existing.IconURL = mod.IconURL;
+                existing.ModLoaderVersion = mod.ModLoaderVersion;
+                existing.ModReferences = mod.ModReference;
+                existing.ModSide = mod.ModSide.ToString();
+                existing.Version = mod.Version;
                 this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Update {mod.DisplayName} ({mod.Name})");
                 try
                 {

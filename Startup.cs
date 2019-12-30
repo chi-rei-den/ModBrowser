@@ -7,14 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ModBrowser.Data;
-using ModBrowser.Models;
-using ModBrowser.Services;
+using Chireiden.ModBrowser.Data;
+using Chireiden.ModBrowser.Models;
+using Chireiden.ModBrowser.Services;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
 
-namespace ModBrowser
+namespace Chireiden.ModBrowser
 {
     public class Startup
     {

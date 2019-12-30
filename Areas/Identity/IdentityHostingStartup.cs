@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ModBrowser.Data;
-using ModBrowser.Models;
+using Chireiden.ModBrowser.Data;
+using Chireiden.ModBrowser.Models;
 
-[assembly: HostingStartup(typeof(ModBrowser.Areas.Identity.IdentityHostingStartup))]
-namespace ModBrowser.Areas.Identity
+[assembly: HostingStartup(typeof(Chireiden.ModBrowser.Areas.Identity.IdentityHostingStartup))]
+namespace Chireiden.ModBrowser.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {

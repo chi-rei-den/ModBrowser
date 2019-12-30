@@ -1,4 +1,4 @@
-namespace ModBrowser.Models
+namespace Chireiden.ModBrowser.Models
 {
     public class ErrorViewModel
     {

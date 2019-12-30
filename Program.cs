@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace ModBrowser
+namespace Chireiden.ModBrowser
 {
     public class Program
     {

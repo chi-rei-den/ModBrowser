@@ -2,8 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ModBrowser.Data;
-using ModBrowser.Models;
+using Chireiden.ModBrowser.Data;
+using Chireiden.ModBrowser.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -15,7 +15,7 @@ using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ModBrowser.Services
+namespace Chireiden.ModBrowser.Services
 {
     public class SyncService : BackgroundService
     {

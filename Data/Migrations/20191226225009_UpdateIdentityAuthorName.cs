@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ModBrowser.Data.Migrations
+namespace Chireiden.ModBrowser.Data.Migrations
 {
     public partial class UpdateIdentityAuthorName : Migration
     {

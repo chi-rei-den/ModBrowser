@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using ModBrowser.Models;
+using Chireiden.ModBrowser.Models;
 using System.Diagnostics;
 
-namespace ModBrowser.Controllers
+namespace Chireiden.ModBrowser.Controllers
 {
     public class HomeController : Controller
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ModBrowser.Data
+namespace Chireiden.ModBrowser.Data
 {
     public static class PaginatedHelper
     {
