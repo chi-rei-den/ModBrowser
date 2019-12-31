@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FileIO = System.IO.File;
+using Chireiden.ModBrowser.Services;
 
 namespace Chireiden.ModBrowser.Controllers
 {
@@ -133,6 +134,25 @@ namespace Chireiden.ModBrowser.Controllers
                 return this.RedirectToAction(nameof(Index));
             }
             return this.View(mod);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Sync(string id)
+        {
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            var mod = await this._context.Mod.FindAsync(id);
+            if (mod == null)
+            {
+                return this.NotFound();
+            }
+
+            SyncService.UpdateRequested.Enqueue(id);
+
+            return this.RedirectToAction("Details", new { id });
         }
 
         // GET: Mods/Edit/5

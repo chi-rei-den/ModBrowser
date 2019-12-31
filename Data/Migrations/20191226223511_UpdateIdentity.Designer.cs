@@ -150,7 +150,7 @@ namespace Chireiden.ModBrowser.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ModBrowser.Models.ApplicationUser", b =>
+            modelBuilder.Entity("Chireiden.ModBrowser.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -217,7 +217,7 @@ namespace Chireiden.ModBrowser.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("ModBrowser.Models.Mod", b =>
+            modelBuilder.Entity("Chireiden.ModBrowser.Models.Mod", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
@@ -276,7 +276,7 @@ namespace Chireiden.ModBrowser.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("ModBrowser.Models.ApplicationUser", null)
+                    b.HasOne("Chireiden.ModBrowser.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -285,7 +285,7 @@ namespace Chireiden.ModBrowser.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("ModBrowser.Models.ApplicationUser", null)
+                    b.HasOne("Chireiden.ModBrowser.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -300,7 +300,7 @@ namespace Chireiden.ModBrowser.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ModBrowser.Models.ApplicationUser", null)
+                    b.HasOne("Chireiden.ModBrowser.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -309,7 +309,7 @@ namespace Chireiden.ModBrowser.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("ModBrowser.Models.ApplicationUser", null)
+                    b.HasOne("Chireiden.ModBrowser.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

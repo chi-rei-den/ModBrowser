@@ -1,14 +1,23 @@
 ﻿using Chireiden.ModBrowser.Models;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Chireiden.ModBrowser.ModLoader
 {
     public static class ModInfo
     {
+        public static void ExtractInfo(this Mod mod, byte[] file)
+        {
+            using (var ms = new MemoryStream(file))
+            {
+                using (var br = new BinaryReader(ms))
+                {
+                    br.ReadBytes(4);
+                    mod.ModLoaderVersion = "tModLoader v" + br.ReadString();
+                }
+            }
+        }
+
         private static IEnumerable<string> ReadList(BinaryReader reader)
         {
             var item = reader.ReadString();

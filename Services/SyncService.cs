@@ -14,6 +14,8 @@ using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Collections.Concurrent;
+using Chireiden.ModBrowser.ModLoader;
 
 namespace Chireiden.ModBrowser.Services
 {
@@ -24,6 +26,7 @@ namespace Chireiden.ModBrowser.Services
         internal static HttpClient Http = new HttpClient() { Timeout = new TimeSpan(0, 5, 0) };
         internal static readonly TimeSpan Interval = TimeSpan.FromMinutes(30);
         internal static Version tModLoaderVersion = new Version("0.11.6.1");
+        internal static ConcurrentQueue<string> UpdateRequested = new ConcurrentQueue<string>();
 
         public SyncService(IServiceScopeFactory scopeFactory, ILogger<SyncService> logger)
         {
@@ -42,6 +45,12 @@ namespace Chireiden.ModBrowser.Services
 
             while (true)
             {
+                var requested = new HashSet<string>();
+                while (UpdateRequested.TryDequeue(out var result))
+                {
+                    requested.Add(result);
+                }
+
                 string str;
                 try
                 {
@@ -126,14 +135,14 @@ namespace Chireiden.ModBrowser.Services
                             item.ModLoaderVersion ??= found?.ModLoaderVersion;
 
                             var mayNeedIcon = !File.Exists(item.IconPath());
-                            if (found?.Version != item.Version)
+                            if (found?.Version != item.Version || requested.Contains(item.Name))
                             {
                                 mayNeedIcon = true;
                                 this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}");
                                 var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
                                 File.WriteAllBytes(item.FilePath(), result);
                                 File.SetLastWriteTimeUtc(item.FilePath(), item.GetUpdateTimestamp());
-                                ExtractInfo(result, item);
+                                item.ExtractInfo(result);
                             }
 
                             item.Size = (int)new FileInfo(item.FilePath()).Length;
@@ -170,18 +179,6 @@ namespace Chireiden.ModBrowser.Services
 
                 this._logger.LogInformation("End of Sync, Sleep");
                 await Task.Delay(Interval);
-            }
-        }
-
-        private static void ExtractInfo(byte[] file, Mod mod)
-        {
-            using (var ms = new MemoryStream(file))
-            {
-                using (var br = new BinaryReader(ms))
-                {
-                    br.ReadBytes(4);
-                    mod.ModLoaderVersion = "tModLoader v" + br.ReadString();
-                }
             }
         }
     }

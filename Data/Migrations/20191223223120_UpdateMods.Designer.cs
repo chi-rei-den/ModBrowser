@@ -214,7 +214,7 @@ namespace Chireiden.ModBrowser.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("ModBrowser.Models.Mod", b =>
+            modelBuilder.Entity("Chireiden.ModBrowser.Models.Mod", b =>
                 {
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
