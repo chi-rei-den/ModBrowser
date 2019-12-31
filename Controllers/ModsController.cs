@@ -128,7 +128,7 @@ namespace Chireiden.ModBrowser.Controllers
                     Name = mod.Name,
                     Homepage = mod.Homepage,
                     IconURL = mod.IconURL,
-                    ModLoaderVersion = mod.ModLoaderVersion,
+                    ModLoaderVersion = "tModLoader v" + mod.ModLoaderVersion,
                     ModReferences = mod.ModReference,
                     ModSide = mod.ModSide.ToString(),
                     Version = mod.Version
@@ -226,7 +226,7 @@ namespace Chireiden.ModBrowser.Controllers
                 existing.Name = mod.Name;
                 existing.Homepage = mod.Homepage;
                 existing.IconURL = mod.IconURL;
-                existing.ModLoaderVersion = mod.ModLoaderVersion;
+                existing.ModLoaderVersion = "tModLoader v" + mod.ModLoaderVersion;
                 existing.ModReferences = mod.ModReference;
                 existing.ModSide = mod.ModSide.ToString();
                 existing.Version = mod.Version;
