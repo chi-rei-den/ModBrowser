@@ -120,8 +120,20 @@ namespace Chireiden.ModBrowser.Controllers
                 this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Create {mod.DisplayName} ({mod.Name})");
 
                 // TODO: Use info from ModInfo when field is empty
-                var entry = new Mod();
-                this._context.Entry(entry).CurrentValues.SetValues(mod);
+                var entry = new Mod
+                {
+                    Author = mod.Author,
+                    Description = mod.Description,
+                    DisplayName = mod.DisplayName,
+                    Name = mod.Name,
+                    Homepage = mod.Homepage,
+                    IconURL = mod.IconURL,
+                    ModLoaderVersion = mod.ModLoaderVersion,
+                    ModReferences = mod.ModReference,
+                    ModSide = mod.ModSide.ToString(),
+                    Version = mod.Version
+                };
+
                 var filename = mod.FilePath();
                 if (FileIO.Exists(filename))
                 {
