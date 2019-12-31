@@ -60,7 +60,7 @@ namespace Chireiden.ModBrowser.Models
 
         public static Version GetModLoaderVersion(this Mod mod) => new Version(mod.ModLoaderVersion.Substring(12));
 
-        public static DateTime GetUpdateTimestamp(this Mod mod) => DateTime.Parse(mod.UpdateTimeStamp);
+        public static DateTime GetUpdateTimestamp(this Mod mod) => DateTime.TryParse(mod.UpdateTimeStamp, out var result) ? result : DateTime.Now;
 
         public static string FilePath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".tmod");
 
