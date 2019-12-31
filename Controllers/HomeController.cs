@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Chireiden.ModBrowser.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Chireiden.ModBrowser.Models;
 using System.Diagnostics;
 
 namespace Chireiden.ModBrowser.Controllers

@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Chireiden.ModBrowser.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Chireiden.ModBrowser.Models;
 using System.Linq;
 
 namespace Chireiden.ModBrowser.Data

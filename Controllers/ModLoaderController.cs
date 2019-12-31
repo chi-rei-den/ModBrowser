@@ -1,8 +1,8 @@
-﻿using Ionic.Zlib;
-using Microsoft.AspNetCore.Mvc;
-using Chireiden.ModBrowser.Data;
+﻿using Chireiden.ModBrowser.Data;
 using Chireiden.ModBrowser.Models;
 using Chireiden.ModBrowser.Services;
+using Ionic.Zlib;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.IO;

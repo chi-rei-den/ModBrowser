@@ -1,21 +1,20 @@
-﻿using Ionic.Zlib;
+﻿using Chireiden.ModBrowser.Data;
+using Chireiden.ModBrowser.Models;
+using Chireiden.ModBrowser.ModLoader;
+using Ionic.Zlib;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Chireiden.ModBrowser.Data;
-using Chireiden.ModBrowser.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Collections.Concurrent;
-using Chireiden.ModBrowser.ModLoader;
 
 namespace Chireiden.ModBrowser.Services
 {
@@ -135,7 +134,7 @@ namespace Chireiden.ModBrowser.Services
                             item.ModLoaderVersion ??= found?.ModLoaderVersion;
 
                             var mayNeedIcon = !File.Exists(item.IconPath());
-                            if (found?.Version != item.Version || requested.Contains(item.Name))
+                            if (found == null || found.Version != item.Version || requested.Contains(item.Name) || found.UpdateTimeStamp != item.UpdateTimeStamp)
                             {
                                 mayNeedIcon = true;
                                 this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}");
@@ -144,8 +143,6 @@ namespace Chireiden.ModBrowser.Services
                                 File.SetLastWriteTimeUtc(item.FilePath(), item.GetUpdateTimestamp());
                                 item.ExtractInfo(result);
                             }
-
-                            item.Size = (int)new FileInfo(item.FilePath()).Length;
 
                             if (mayNeedIcon && !string.IsNullOrWhiteSpace(item.IconURL))
                             {

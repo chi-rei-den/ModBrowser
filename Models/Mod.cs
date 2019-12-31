@@ -1,5 +1,4 @@
-﻿using Chireiden.ModBrowser.ViewModels;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -63,8 +62,6 @@ namespace Chireiden.ModBrowser.Models
         public static DateTime GetUpdateTimestamp(this Mod mod) => DateTime.TryParse(mod.UpdateTimeStamp, out var result) ? result : DateTime.Now;
 
         public static string FilePath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".tmod");
-
-        public static string FilePath(this ModVM mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".tmod");
 
         public static string IconPath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".png");
     }

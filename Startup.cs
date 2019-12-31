@@ -1,3 +1,6 @@
+using Chireiden.ModBrowser.Data;
+using Chireiden.ModBrowser.Models;
+using Chireiden.ModBrowser.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
@@ -7,9 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Chireiden.ModBrowser.Data;
-using Chireiden.ModBrowser.Models;
-using Chireiden.ModBrowser.Services;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;

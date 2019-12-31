@@ -1,19 +1,18 @@
-﻿using Humanizer;
+﻿using Chireiden.ModBrowser.Data;
+using Chireiden.ModBrowser.Models;
+using Chireiden.ModBrowser.ModLoader;
+using Chireiden.ModBrowser.Services;
+using Chireiden.ModBrowser.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Chireiden.ModBrowser.Data;
-using Chireiden.ModBrowser.Models;
-using Chireiden.ModBrowser.ModLoader;
-using Chireiden.ModBrowser.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FileIO = System.IO.File;
-using Chireiden.ModBrowser.Services;
 
 namespace Chireiden.ModBrowser.Controllers
 {
@@ -30,7 +29,6 @@ namespace Chireiden.ModBrowser.Controllers
             this._logger = logger;
         }
 
-        // GET: Mods
         public IActionResult Index(string by, string order, string search, string filter, int? page)
         {
             if (!string.IsNullOrWhiteSpace(search) || page == null)
@@ -76,7 +74,6 @@ namespace Chireiden.ModBrowser.Controllers
             return this.View(result.ToPaginated(page.Value, 20).ToList());
         }
 
-        // GET: Mods/Details/5
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)
@@ -89,16 +86,12 @@ namespace Chireiden.ModBrowser.Controllers
             return mod == null ? this.NotFound() : (IActionResult)this.View(mod);
         }
 
-        // GET: Mods/Create
         [Authorize]
         public IActionResult Create()
         {
             return this.View(new ModVM());
         }
 
-        // POST: Mods/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -106,44 +99,42 @@ namespace Chireiden.ModBrowser.Controllers
         {
             if (this.ModelState.IsValid)
             {
-                if (this._context.Mod.Find(mod.Name) != null)
+                var length = (int)mod.File.Length;
+                var buffer = new byte[length];
+                mod.File.OpenReadStream().Read(buffer, 0, length);
+
+                var entry = new Mod();
+                if (!entry.ExtractInfo(buffer, true))
+                {
+                    return this.UnprocessableEntity();
+                }
+
+                if (this._context.Mod.Find(entry.Name) != null)
                 {
                     return this.Conflict();
                 }
 
                 var user = await this._userManager.GetUserAsync(this.User);
-                if (!mod.Author.Split(", ").Contains(user.AuthorName))
+                if (!entry.Author.Split(", ").Contains(user.AuthorName))
                 {
-                    mod.Author += ", " + user.AuthorName;
+                    entry.Author += ", " + user.AuthorName;
                 }
 
-                this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Create {mod.DisplayName} ({mod.Name})");
+                this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Create {entry.DisplayName} ({entry.Name})");
 
-                // TODO: Use info from ModInfo when field is empty
-                var entry = new Mod
-                {
-                    Author = mod.Author,
-                    Description = mod.Description,
-                    DisplayName = mod.DisplayName,
-                    Name = mod.Name,
-                    Homepage = mod.Homepage,
-                    IconURL = mod.IconURL,
-                    ModLoaderVersion = "tModLoader v" + mod.ModLoaderVersion,
-                    ModReferences = mod.ModReference,
-                    ModSide = mod.ModSide.ToString(),
-                    Version = mod.Version
-                };
-
-                var filename = mod.FilePath();
+                var filename = entry.FilePath();
                 if (FileIO.Exists(filename))
                 {
                     FileIO.Delete(filename);
                 }
-                mod.File.CopyTo(FileIO.OpenWrite(filename));
-                entry.Size = (int)new System.IO.FileInfo(entry.FilePath()).Length;
+
+                FileIO.WriteAllBytes(filename, buffer);
+
+                entry.UpdateTimeStamp = DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss");
+
                 this._context.Add(entry);
                 await this._context.SaveChangesAsync();
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction(nameof(Details), new { id = entry.Name });
             }
             return this.View(mod);
         }
@@ -167,7 +158,6 @@ namespace Chireiden.ModBrowser.Controllers
             return this.RedirectToAction("Details", new { id });
         }
 
-        // GET: Mods/Edit/5
         [Authorize]
         public async Task<IActionResult> Edit(string id)
         {
@@ -182,30 +172,26 @@ namespace Chireiden.ModBrowser.Controllers
                 return this.NotFound();
             }
 
-            return this.View(new ModVM
-            {
-                Author = mod.Author,
-                Description = mod.Description,
-                DisplayName = mod.DisplayName,
-                Name = mod.Name,
-                Homepage = mod.Homepage,
-                IconURL = mod.IconURL,
-                ModLoaderVersion = mod.ModLoaderVersion,
-                ModReference = mod.ModReferences,
-                ModSide = EnumDehumanizeExtensions.DehumanizeTo<ModSide>(mod.ModSide),
-                Version = mod.Version
-            });
+            return this.View(new ModVM());
         }
 
-        // POST: Mods/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<IActionResult> Edit(string id, ModVM mod)
         {
-            if (id != mod.Name)
+            var length = (int)mod.File.Length;
+            var buffer = new byte[length];
+            mod.File.OpenReadStream().Read(buffer, 0, length);
+
+            var entry = new Mod();
+
+            if (!entry.ExtractInfo(buffer))
+            {
+                return this.UnprocessableEntity();
+            }
+
+            if (id != entry.Name)
             {
                 return this.NotFound();
             }
@@ -213,53 +199,44 @@ namespace Chireiden.ModBrowser.Controllers
             if (this.ModelState.IsValid)
             {
                 var existing = this._context.Mod.Find(id);
+                if (existing == null)
+                {
+                    return this.NotFound();
+                }
+
                 var user = await this._userManager.GetUserAsync(this.User);
                 if (!existing.Author.Split(", ").Contains(user.AuthorName))
                 {
                     return this.Forbid();
                 }
 
-                // TODO: Use info from ModInfo when field is empty
-                existing.Author = mod.Author;
-                existing.Description = mod.Description;
-                existing.DisplayName = mod.DisplayName;
-                existing.Name = mod.Name;
-                existing.Homepage = mod.Homepage;
-                existing.IconURL = mod.IconURL;
-                existing.ModLoaderVersion = "tModLoader v" + mod.ModLoaderVersion;
-                existing.ModReferences = mod.ModReference;
-                existing.ModSide = mod.ModSide.ToString();
-                existing.Version = mod.Version;
-                this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Update {mod.DisplayName} ({mod.Name})");
+                existing.ExtractInfo(buffer, true);
+
+                entry.UpdateTimeStamp = DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss");
+
+                this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Update {existing.DisplayName} ({existing.Name})");
                 try
                 {
-                    var filename = mod.FilePath();
+                    var filename = existing.FilePath();
                     if (FileIO.Exists(filename))
                     {
                         FileIO.Delete(filename);
                     }
-                    mod.File.CopyTo(FileIO.OpenWrite(filename));
-                    existing.Size = (int)new System.IO.FileInfo(existing.FilePath()).Length;
+
+                    FileIO.WriteAllBytes(filename, buffer);
+
                     this._context.Update(existing);
                     await this._context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!this.ModExists(mod.Name))
-                    {
-                        return this.NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
-                return this.RedirectToAction(nameof(Index));
+                return this.RedirectToAction(nameof(Details), new { id = entry.Name });
             }
             return this.View(mod);
         }
 
-        // GET: Mods/Delete/5
         [Authorize]
         public async Task<IActionResult> Delete(string id)
         {
@@ -278,7 +255,6 @@ namespace Chireiden.ModBrowser.Controllers
             return this.View(mod);
         }
 
-        // POST: Mods/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -295,11 +271,6 @@ namespace Chireiden.ModBrowser.Controllers
             this._context.Mod.Remove(mod);
             await this._context.SaveChangesAsync();
             return this.RedirectToAction(nameof(Index));
-        }
-
-        private bool ModExists(string id)
-        {
-            return this._context.Mod.Any(e => e.Name == id);
         }
     }
 }

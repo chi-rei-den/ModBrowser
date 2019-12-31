@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Chireiden.ModBrowser.Data;
+using Chireiden.ModBrowser.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -6,9 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using Chireiden.ModBrowser.Data;
-using Chireiden.ModBrowser.Data.Migrations;
-using Chireiden.ModBrowser.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -93,7 +92,7 @@ namespace Chireiden.ModBrowser.Areas.Identity.Pages.Account
                     DisplayName = this.Input.DisplayName,
                     AuthorName = this.Input.AuthorName
                 };
-                if (this._context.Mod.AsEnumerable().SelectMany(m=>m.Author.Split(", ")).Contains(user.AuthorName))
+                if (this._context.Mod.AsEnumerable().SelectMany(m => m.Author.Split(", ")).Contains(user.AuthorName))
                 {
                     this.ModelState.AddModelError(nameof(user.AuthorName), "Author name already exist");
                     return this.Page();
