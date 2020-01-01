@@ -195,6 +195,11 @@ namespace Chireiden.ModBrowser.Services
                                 }
                             }
 
+                            if (item.Size == 0)
+                            {
+                                item.Size = (int)new FileInfo(item.FilePath()).Length;
+                            }
+
                             if (mayNeedIcon && !string.IsNullOrWhiteSpace(item.IconURL))
                             {
                                 var result = await Http.GetByteArrayAsync(item.IconURL);
