@@ -35,9 +35,10 @@ namespace Chireiden.ModBrowser.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            if (!Directory.Exists("mods"))
+            var modsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods");
+            if (!Directory.Exists(modsFolder))
             {
-                Directory.CreateDirectory("mods");
+                Directory.CreateDirectory(modsFolder);
             }
 
             await Task.Delay(TimeSpan.FromSeconds(15));
@@ -110,7 +111,7 @@ namespace Chireiden.ModBrowser.Services
                 this._logger.LogInformation($"Unpacked Mod list ({modlist.Count})");
 
                 // Use the version from listmods.php.
-                var versions = modlist.Where(i => i.ModLoaderVersion.Length > 12).Select(i => new Version(i.ModLoaderVersion.Substring(12))).Max() ?? tModLoaderVersion;
+                var versions = modlist.Where(i => i.ModLoaderVersion?.Length > 12).Select(i => new Version(i.ModLoaderVersion.Substring(12))).Max() ?? tModLoaderVersion;
                 var platforms = new List<string>
                 {
                     $"tModLoader.Windows.v{versions}.zip",
@@ -118,7 +119,7 @@ namespace Chireiden.ModBrowser.Services
                     $"tModLoader.Mac.v{versions}.zip"
                 };
 
-                if (versions >= tModLoaderVersion || platforms.Any(p => !File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", p))))
+                if (versions >= tModLoaderVersion || platforms.Any(p => !File.Exists(Path.Combine(modsFolder, p))))
                 {
                     this._logger.LogInformation($"Update tModLoader {versions}");
                     foreach (var platform in platforms)
@@ -126,7 +127,7 @@ namespace Chireiden.ModBrowser.Services
                         var downloadURL = $"https://github.com/tModLoader/tModLoader/releases/download/v{versions}/{platform}";
                         this._logger.LogInformation($"Download {platform} from {downloadURL}");
                         var compressed = Http.GetByteArrayAsync(downloadURL).Result;
-                        File.WriteAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", platform), compressed);
+                        File.WriteAllBytes(Path.Combine(modsFolder, platform), compressed);
                     }
 
                     tModLoaderVersion = versions;
