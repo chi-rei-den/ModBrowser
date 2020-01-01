@@ -162,14 +162,37 @@ namespace Chireiden.ModBrowser.Services
                             item.ModLoaderVersion ??= found?.ModLoaderVersion;
 
                             var mayNeedIcon = !File.Exists(item.IconPath());
-                            if (found == null || found.Version != item.Version || requested.Contains(item.Name) || found.UpdateTimeStamp != item.UpdateTimeStamp)
+                            var updated = false;
+                            if (found == null)
+                            {
+                                updated = true;
+                            }
+                            else if (found.Version != item.Version)
+                            {
+                                updated = true;
+                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}");
+                            }
+                            else if (requested.Contains(item.Name))
+                            {
+                                updated = true;
+                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) requested");
+                            }
+                            else if (found?.UpdateTimeStamp != item.UpdateTimeStamp)
+                            {
+                                updated = true;
+                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) time {found?.UpdateTimeStamp} => {item.UpdateTimeStamp}");
+                            }
+
+                            if (updated)
                             {
                                 mayNeedIcon = true;
-                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}");
                                 var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
                                 File.WriteAllBytes(item.FilePath(), result);
                                 File.SetLastWriteTimeUtc(item.FilePath(), item.GetUpdateTimestamp());
-                                item.ExtractInfo(result);
+                                if (!item.ExtractInfo(result, true))
+                                {
+                                    this._logger.LogInformation($"Unable to extract from {item.Name}");
+                                }
                             }
 
                             if (mayNeedIcon && !string.IsNullOrWhiteSpace(item.IconURL))
