@@ -114,6 +114,9 @@ namespace Chireiden.ModBrowser.Services
                 var versions = modlist.Where(i => i.ModLoaderVersion?.Length > 12).Select(i => new Version(i.ModLoaderVersion.Substring(12))).Max() ?? tModLoaderVersion;
                 var platforms = new List<string>
                 {
+                    $"ExampleMod.v{versions}.zip",
+                    "ModCompile_FNA.zip",
+                    "ModCompile_XNA.zip",
                     $"tModLoader.Windows.v{versions}.zip",
                     $"tModLoader.Linux.v{versions}.tar.gz",
                     $"tModLoader.Mac.v{versions}.zip"
