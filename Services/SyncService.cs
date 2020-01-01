@@ -119,7 +119,7 @@ namespace Chireiden.ModBrowser.Services
                     $"tModLoader.Mac.v{versions}.zip"
                 };
 
-                if (versions >= tModLoaderVersion || platforms.Any(p => !File.Exists(Path.Combine(modsFolder, p))))
+                if (versions > tModLoaderVersion || platforms.Any(p => !File.Exists(Path.Combine(modsFolder, p))))
                 {
                     this._logger.LogInformation($"Update tModLoader {versions}");
                     foreach (var platform in platforms)
