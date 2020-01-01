@@ -120,9 +120,11 @@ namespace Chireiden.ModBrowser.Services
 
                 if (versions >= tModLoaderVersion || platforms.Any(p => !File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", p))))
                 {
+                    this._logger.LogInformation($"Update tModLoader {versions}");
                     foreach (var platform in platforms)
                     {
                         var downloadURL = $"https://github.com/tModLoader/tModLoader/releases/download/v{versions}/{platform}";
+                        this._logger.LogInformation($"Download {platform} from {downloadURL}");
                         var compressed = Http.GetByteArrayAsync(downloadURL).Result;
                         File.WriteAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", platform), compressed);
                     }
