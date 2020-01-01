@@ -340,3 +340,5 @@ ASALocalRun/
 healthchecksdb
 /wwwroot/sqlite.db
 /wwwroot/sqlite.db-journal
+/wwwroot/mods
+/sqlite.db

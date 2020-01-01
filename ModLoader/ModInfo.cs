@@ -1,4 +1,6 @@
 ﻿using Chireiden.ModBrowser.Models;
+using Ionic.Zlib;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -6,7 +8,6 @@ namespace Chireiden.ModBrowser.ModLoader
 {
     public static class ModInfo
     {
-        // TODO: Support legacy tmod format (0.10.x)?
         public static bool ExtractInfo(this Mod mod, byte[] file, bool readInfo = false)
         {
             try
@@ -16,32 +17,65 @@ namespace Chireiden.ModBrowser.ModLoader
                 using var ms = new MemoryStream(file);
                 using var br = new BinaryReader(ms);
                 br.ReadBytes(4);
-                mod.ModLoaderVersion = "tModLoader v" + br.ReadString();
+                var tmlVersion = br.ReadString();
+                mod.ModLoaderVersion = "tModLoader v" + tmlVersion;
                 br.ReadBytes(280);
-                mod.Name = br.ReadString();
-                mod.Version = br.ReadString();
 
-                if (!readInfo)
+                if (new Version(tmlVersion) > new Version(0, 11))
                 {
-                    return true;
-                }
+                    mod.Name = br.ReadString();
+                    mod.Version = "v" + br.ReadString();
 
-                var fileCount = br.ReadInt32();
-                var files = new List<ModFile>();
-                for (var i = 0; i < fileCount; i++)
-                {
-                    files.Add(new ModFile(br));
-                }
-
-                for (var i = 0; i < fileCount; i++)
-                {
-                    if (files[i].FileName == "Info")
+                    if (!readInfo)
                     {
-                        br.ReadModInfo(mod);
+                        return true;
                     }
-                    else
+
+                    var fileCount = br.ReadInt32();
+                    var files = new List<ModFile>();
+                    for (var i = 0; i < fileCount; i++)
                     {
-                        br.ReadBytes(files[i].CompressedLength);
+                        files.Add(new ModFile(br));
+                    }
+
+                    for (var i = 0; i < fileCount; i++)
+                    {
+                        if (files[i].FileName == "Info")
+                        {
+                            br.ReadModInfo(mod);
+                        }
+                        else
+                        {
+                            br.ReadBytes(files[i].CompressedLength);
+                        }
+                    }
+                }
+                else
+                {
+                    using var deflateStream = new DeflateStream(ms, CompressionMode.Decompress);
+                    using var content = new BinaryReader(deflateStream);
+
+                    mod.Name = br.ReadString();
+                    mod.Version = "v" + br.ReadString();
+
+                    if (!readInfo)
+                    {
+                        return true;
+                    }
+
+                    var fileCount = br.ReadInt32();
+                    for (var i = 0; i < fileCount; i++)
+                    {
+                        var fileName = content.ReadString();
+                        var size = content.ReadInt32();
+                        if (fileName == "Info")
+                        {
+                            content.ReadModInfo(mod);
+                        }
+                        else
+                        {
+                            content.ReadBytes(size);
+                        }
                     }
                 }
                 return true;

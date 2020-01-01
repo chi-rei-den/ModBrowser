@@ -29,7 +29,7 @@ namespace Chireiden.ModBrowser
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddLogging(opt => opt.AddConsole(c => c.TimestampFormat = "[HH:mm:ss] "));
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=.\\sqlite.db"));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=sqlite.db"));
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSingleton<IHostedService, SyncService>();
