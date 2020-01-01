@@ -109,6 +109,28 @@ namespace Chireiden.ModBrowser.Services
                 var modlist = JsonConvert.DeserializeObject<List<Mod>>(list);
                 this._logger.LogInformation($"Unpacked Mod list ({modlist.Count})");
 
+                // Use the version from listmods.php.
+                var versions = modlist.Where(i => i.ModLoaderVersion.Length > 12).Select(i => new Version(i.ModLoaderVersion.Substring(12))).Max() ?? tModLoaderVersion;
+                var platforms = new List<string>
+                {
+                    $"tModLoader.Windows.v{versions}.zip",
+                    $"tModLoader.Linux.v{versions}.tar.gz",
+                    $"tModLoader.Mac.v{versions}.zip"
+                };
+
+                if (versions >= tModLoaderVersion || platforms.Any(p => !File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", p))))
+                {
+                    foreach (var platform in platforms)
+                    {
+                        var downloadURL = $"https://github.com/tModLoader/tModLoader/releases/download/v{versions}/{platform}";
+                        var compressed = Http.GetByteArrayAsync(downloadURL).Result;
+                        File.WriteAllBytes(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", platform), compressed);
+                    }
+
+                    tModLoaderVersion = versions;
+                    continue;
+                }
+
                 var descriptions = Http.GetStringAsync("http://javid.ddns.net/tModLoader/tools/querymodnamehomepagedescription.php").Result;
                 var desclist = JsonConvert.DeserializeObject<List<Mod>>(descriptions).ToDictionary(i => i.Name);
                 foreach (var item in modlist)
