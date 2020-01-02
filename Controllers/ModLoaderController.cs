@@ -133,15 +133,11 @@ namespace Chireiden.ModBrowser.Controllers
                 string encoded;
                 using (var ms = new MemoryStream())
                 {
-                    using (var stream = new GZipStream(ms, CompressionMode.Compress))
-                    {
-                        using (var sr = new StreamWriter(stream))
-                        {
-                            sr.Write(modlist);
-                            sr.Flush();
-                            encoded = Convert.ToBase64String(ms.ToArray());
-                        }
-                    }
+                    using var stream = new GZipStream(ms, CompressionMode.Compress);
+                    using var sr = new StreamWriter(stream);
+                    sr.Write(modlist);
+                    sr.Flush();
+                    encoded = Convert.ToBase64String(ms.ToArray());
                 }
 
                 return this.Content(JsonConvert.SerializeObject(

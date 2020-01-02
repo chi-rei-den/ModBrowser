@@ -98,13 +98,9 @@ namespace Chireiden.ModBrowser.Services
                 string list;
                 using (var ms = new MemoryStream(Convert.FromBase64String(json["modlist_compressed"].ToString())))
                 {
-                    using (var stream = new GZipStream(ms, CompressionMode.Decompress))
-                    {
-                        using (var sr = new StreamReader(stream))
-                        {
-                            list = sr.ReadToEnd();
-                        }
-                    }
+                    using var stream = new GZipStream(ms, CompressionMode.Decompress);
+                    using var sr = new StreamReader(stream);
+                    list = sr.ReadToEnd();
                 }
 
                 var modlist = JsonConvert.DeserializeObject<List<Mod>>(list);
@@ -155,71 +151,69 @@ namespace Chireiden.ModBrowser.Services
                 {
                     try
                     {
-                        using (var scope = this.scopeFactory.CreateScope())
+                        using var scope = this.scopeFactory.CreateScope();
+                        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                        var found = db.Mod.Find(item.Name);
+                        item.ModLoaderVersion ??= found?.ModLoaderVersion;
+
+                        var mayNeedIcon = !File.Exists(item.IconPath());
+                        var updated = false;
+                        if (found == null)
                         {
-                            var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                            var found = db.Mod.Find(item.Name);
-                            item.ModLoaderVersion ??= found?.ModLoaderVersion;
-
-                            var mayNeedIcon = !File.Exists(item.IconPath());
-                            var updated = false;
-                            if (found == null)
-                            {
-                                updated = true;
-                            }
-                            else if (found.Version != item.Version)
-                            {
-                                updated = true;
-                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}");
-                            }
-                            else if (requested.Contains(item.Name))
-                            {
-                                updated = true;
-                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) requested");
-                            }
-                            else if (found?.UpdateTimeStamp != item.UpdateTimeStamp)
-                            {
-                                updated = true;
-                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) time {found?.UpdateTimeStamp} => {item.UpdateTimeStamp}");
-                            }
-
-                            if (updated)
-                            {
-                                mayNeedIcon = true;
-                                var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
-                                File.WriteAllBytes(item.FilePath(), result);
-                                File.SetLastWriteTimeUtc(item.FilePath(), item.GetUpdateTimestamp());
-                                if (!item.ExtractInfo(result, true))
-                                {
-                                    this._logger.LogInformation($"Unable to extract from {item.Name}");
-                                }
-                            }
-
-                            if (item.Size == 0)
-                            {
-                                item.Size = (int)new FileInfo(item.FilePath()).Length;
-                            }
-
-                            if (mayNeedIcon && !string.IsNullOrWhiteSpace(item.IconURL))
-                            {
-                                var result = await Http.GetByteArrayAsync(item.IconURL);
-                                File.WriteAllBytes(item.IconPath(), result);
-                                File.SetLastWriteTimeUtc(item.IconPath(), item.GetUpdateTimestamp());
-                            }
-
-                            if (found == null)
-                            {
-                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) created.");
-                                db.Mod.Add(item);
-                            }
-                            else
-                            {
-                                db.Entry(found).CurrentValues.SetValues(item);
-                                db.Mod.Update(found);
-                            }
-
-                            db.SaveChanges();
+                            updated = true;
                         }
+                        else if (found.Version != item.Version)
+                        {
+                            updated = true;
+                            this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}");
+                        }
+                        else if (requested.Contains(item.Name))
+                        {
+                            updated = true;
+                            this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) requested");
+                        }
+                        else if (found?.UpdateTimeStamp != item.UpdateTimeStamp)
+                        {
+                            updated = true;
+                            this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) time {found?.UpdateTimeStamp} => {item.UpdateTimeStamp}");
+                        }
+
+                        if (updated)
+                        {
+                            mayNeedIcon = true;
+                            var result = await Http.GetByteArrayAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
+                            File.WriteAllBytes(item.FilePath(), result);
+                            File.SetLastWriteTimeUtc(item.FilePath(), item.GetUpdateTimestamp());
+                            if (!item.ExtractInfo(result, true))
+                            {
+                                this._logger.LogInformation($"Unable to extract from {item.Name}");
+                            }
+                        }
+
+                        if (item.Size == 0)
+                        {
+                            item.Size = (int)new FileInfo(item.FilePath()).Length;
+                        }
+
+                        if (mayNeedIcon && !string.IsNullOrWhiteSpace(item.IconURL))
+                        {
+                            var result = await Http.GetByteArrayAsync(item.IconURL);
+                            File.WriteAllBytes(item.IconPath(), result);
+                            File.SetLastWriteTimeUtc(item.IconPath(), item.GetUpdateTimestamp());
+                        }
+
+                        if (found == null)
+                        {
+                            this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) created.");
+                            db.Mod.Add(item);
+                        }
+                        else
+                        {
+                            db.Entry(found).CurrentValues.SetValues(item);
+                            db.Mod.Update(found);
+                        }
+
+                        db.SaveChanges();
                     }
                     catch (Exception e)
                     {
