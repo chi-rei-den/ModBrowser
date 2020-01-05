@@ -162,20 +162,16 @@ namespace Chireiden.ModBrowser.Services
                         {
                             updated = true;
                         }
-                        else if (found.Version != item.Version)
-                        {
-                            updated = true;
-                            this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}");
-                        }
                         else if (requested.Contains(item.Name))
                         {
                             updated = true;
                             this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) requested");
                         }
-                        else if (found?.UpdateTimeStamp != item.UpdateTimeStamp)
+                        else if (found.UpdateTimeStamp != item.UpdateTimeStamp)
                         {
+                            // Authors may change the version as they want, so we don't compare the version
                             updated = true;
-                            this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) time {found?.UpdateTimeStamp} => {item.UpdateTimeStamp}");
+                            this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}, {found?.UpdateTimeStamp} => {item.UpdateTimeStamp}");
                         }
 
                         if (updated)
