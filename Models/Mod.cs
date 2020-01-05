@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Chireiden.ModBrowser.Models
 {
@@ -55,6 +56,8 @@ namespace Chireiden.ModBrowser.Models
 
     public static class ModHelper
     {
+        public static readonly Regex Format = new Regex("(?<!\\\\)\\[(?<tag>[a-zA-Z]{1,10})(\\/(?<options>[^:]+))?:(?<text>.+?)(?<!\\\\)\\]", RegexOptions.Compiled);
+
         public static Version GetVersion(this Mod mod) => new Version(mod.Version.Substring(1));
 
         public static Version GetModLoaderVersion(this Mod mod) => new Version(mod.ModLoaderVersion.Substring(12));
@@ -64,5 +67,14 @@ namespace Chireiden.ModBrowser.Models
         public static string FilePath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".tmod");
 
         public static string IconPath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".png");
+
+        public static string HtmlName(this Mod mod) => Format.Replace(mod.DisplayName, (m) => {
+            return m.Groups["tag"].Value switch
+            {
+                "c" => $"<span style=\"color:#{m.Groups["options"]}\">{System.Net.WebUtility.HtmlEncode(m.Groups["text"].Value)}<span>",
+                "i" => $"<img src=\"direct/icons/{m.Groups["text"].Value}.png\"/>",
+                _ => m.Value
+            };
+        });
     }
 }

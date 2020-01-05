@@ -5,7 +5,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details of @Html.Raw(Model.DisplayName)</h1>
+<h1>Details of @Html.Raw(Model.HtmlName())</h1>
 
 <div>
     <hr />
@@ -14,7 +14,7 @@
             @Html.DisplayNameFor(model => model.DisplayName)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.DisplayName)
+            <span title="@Html.DisplayFor(model => model.DisplayName)">@(Html.Raw(Model.HtmlName()))</span>
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
