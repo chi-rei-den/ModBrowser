@@ -5,7 +5,7 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details of @Html.Raw(Model.HtmlName())</h1>
+<h1>Details of @Html.Raw(Model.DisplayName.TagToHtml())</h1>
 
 <div>
     <hr />
@@ -14,7 +14,7 @@
             @Html.DisplayNameFor(model => model.DisplayName)
         </dt>
         <dd class="col-sm-10">
-            <span title="@Html.DisplayFor(model => model.DisplayName)">@(Html.Raw(Model.HtmlName()))</span>
+            <span title="@Html.DisplayFor(model => model.DisplayName)">@(Html.Raw(Model.DisplayName.TagToHtml()))</span>
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
@@ -52,7 +52,7 @@
                 @Html.DisplayNameFor(model => model.Description)
             </dt>
             <dd class="col-sm-10">
-                @Html.Raw(Model.Description.Replace("\r\n", "<br />"))
+                @Html.Raw(Model.Description.Replace("\r\n", "<br />").TagToHtml())
             </dd>
         }
         <dt class="col-sm-2">

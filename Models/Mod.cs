@@ -68,7 +68,7 @@ namespace Chireiden.ModBrowser.Models
 
         public static string IconPath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".png");
 
-        public static string HtmlName(this Mod mod) => Format.Replace(mod.DisplayName, (m) => {
+        public static string TagToHtml(this string value) => Format.Replace(value, (m) => {
             return m.Groups["tag"].Value switch
             {
                 "c" => $"<span style=\"color:#{m.Groups["options"]}\">{System.Net.WebUtility.HtmlEncode(m.Groups["text"].Value)}<span>",

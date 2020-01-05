@@ -51,7 +51,7 @@
         {
             <tr>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Name" title="@Html.DisplayFor(modelItem => item.Name) (@Html.DisplayFor(modelItem => item.DisplayName))">@(Html.Raw(item.HtmlName()))</a>
+                    <a asp-action="Details" asp-route-id="@item.Name" title="@Html.DisplayFor(modelItem => item.Name) (@Html.DisplayFor(modelItem => item.DisplayName))">@(Html.Raw(item.DisplayName.TagToHtml()))</a>
                     <br />
                     @if (!string.IsNullOrWhiteSpace(item.IconURL))
                     {
