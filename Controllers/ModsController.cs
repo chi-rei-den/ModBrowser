@@ -16,6 +16,7 @@ using FileIO = System.IO.File;
 
 namespace Chireiden.ModBrowser.Controllers
 {
+    [ResponseCache(Duration = 1800, Location = ResponseCacheLocation.Any, NoStore = false)]
     public class ModsController : Controller
     {
         private readonly ApplicationDbContext _context;

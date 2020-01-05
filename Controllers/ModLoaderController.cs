@@ -11,6 +11,7 @@ using System.Net.Mime;
 
 namespace Chireiden.ModBrowser.Controllers
 {
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, NoStore = false)]
     public class ModLoaderController : Controller
     {
         private readonly ApplicationDbContext _context;
