@@ -139,11 +139,13 @@ namespace Chireiden.ModBrowser.Controllers
                 string encoded;
                 using (var ms = new MemoryStream())
                 {
-                    using var stream = new GZipStream(ms, CompressionMode.Compress);
-                    using var sr = new StreamWriter(stream);
-                    sr.Write(serialized);
-                    sr.Flush();
-                    stream.Flush();
+                    using (var stream = new GZipStream(ms, CompressionMode.Compress, true))
+                    {
+                        using var sr = new StreamWriter(stream);
+                        sr.Write(serialized);
+                        sr.Flush();
+                    }
+
                     encoded = Convert.ToBase64String(ms.ToArray());
                     this._logger.LogInformation($"ModList: Compress {serialized.Length} to {encoded.Length}.");
                 }
