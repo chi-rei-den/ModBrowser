@@ -93,6 +93,14 @@ namespace Chireiden.ModBrowser.Controllers
         [HttpGet, HttpPost]
         public IActionResult ModListing(string modloaderversion, string platform, string netversion, string uncompressed, string preserveicon)
         {
+            var updateurl = platform[0] switch
+            {
+                'w' => $"tModLoader.Windows.v{SyncService.tModLoaderVersion}.zip",
+                'l' => $"tModLoader.Linux.v{SyncService.tModLoaderVersion}.tar.gz",
+                'm' => $"tModLoader.Mac.v{SyncService.tModLoaderVersion}.zip",
+                _ => null
+            };
+
             var clientVersion = new Version(!string.IsNullOrWhiteSpace(modloaderversion) && modloaderversion.Length > 12
                 ? modloaderversion.Substring(12)
                 : "0.0.0.0");
@@ -121,7 +129,8 @@ namespace Chireiden.ModBrowser.Controllers
                     {
                         message = "An update to tModLoader is available.",
                         url = "https://github.com/tModLoader/tModLoader/releases",
-                        current = clientVersion.ToString()
+                        autoupdateurl = $"{this.Request.Scheme}://{this.Request.Host}/direct/{updateurl}",
+                        current = clientVersion.ToString(),
                     },
                     modlist
                 }, Formatting.None, new JsonSerializerSettings
@@ -157,7 +166,8 @@ namespace Chireiden.ModBrowser.Controllers
                         ? null : new
                         {
                             message = "An update to tModLoader is available.",
-                            url = "https://github.com/tModLoader/tModLoader/releases"
+                            url = "https://github.com/tModLoader/tModLoader/releases",
+                            autoupdateurl = $"{this.Request.Scheme}://{this.Request.Host}/direct/{updateurl}",
                         },
                         modlist_compressed = encoded
                     }, Formatting.None, new JsonSerializerSettings
