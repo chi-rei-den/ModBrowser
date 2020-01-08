@@ -143,6 +143,7 @@ namespace Chireiden.ModBrowser.Controllers
                     using var sr = new StreamWriter(stream);
                     sr.Write(serialized);
                     sr.Flush();
+                    stream.Flush();
                     encoded = Convert.ToBase64String(ms.ToArray());
                     this._logger.LogInformation($"ModList: Compress {serialized.Length} to {encoded.Length}.");
                 }
