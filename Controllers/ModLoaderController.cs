@@ -3,6 +3,7 @@ using Chireiden.ModBrowser.Models;
 using Chireiden.ModBrowser.Services;
 using Ionic.Zlib;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -15,10 +16,12 @@ namespace Chireiden.ModBrowser.Controllers
     public class ModLoaderController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ModLoaderController> _logger;
 
-        public ModLoaderController(ApplicationDbContext context)
+        public ModLoaderController(ApplicationDbContext context, ILogger<ModLoaderController> logger)
         {
             this._context = context;
+            this._logger = logger;
         }
 
         [HttpGet, HttpPost]
@@ -106,7 +109,9 @@ namespace Chireiden.ModBrowser.Controllers
                     cloned.IconURL = System.IO.File.Exists(cloned.IconPath()) ? $"{this.Request.Scheme}://{this.Request.Host}/direct/{cloned.Name}.png" : null;
                 }
                 return cloned;
-            });
+            }).ToList();
+
+            this._logger.LogInformation($"ModList: {modlist.Count} items.");
 
             if (clientVersion <= new Version(0, 11) || !string.IsNullOrWhiteSpace(uncompressed))
             {
@@ -136,9 +141,10 @@ namespace Chireiden.ModBrowser.Controllers
                 {
                     using var stream = new GZipStream(ms, CompressionMode.Compress);
                     using var sr = new StreamWriter(stream);
-                    sr.Write(modlist);
+                    sr.Write(serialized);
                     sr.Flush();
                     encoded = Convert.ToBase64String(ms.ToArray());
+                    this._logger.LogInformation($"ModList: Compress {serialized.Length} to {encoded.Length}.");
                 }
 
                 return this.Content(JsonConvert.SerializeObject(
