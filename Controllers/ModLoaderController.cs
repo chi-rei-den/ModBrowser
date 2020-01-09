@@ -93,6 +93,7 @@ namespace Chireiden.ModBrowser.Controllers
         [HttpGet, HttpPost]
         public IActionResult ModListing(string modloaderversion, string platform, string netversion, string uncompressed, string preserveicon)
         {
+            platform ??= "w";
             var updateurl = platform[0] switch
             {
                 'w' => $"tModLoader.Windows.v{SyncService.tModLoaderVersion}.zip",
