@@ -232,11 +232,20 @@ namespace Chireiden.ModBrowser.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Index.
+        ///   Looks up a localized string similar to Login.
         /// </summary>
-        public static string Index {
+        public static string Login {
             get {
-                return ResourceManager.GetString("Index", resourceCulture);
+                return ResourceManager.GetString("Login", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logout.
+        /// </summary>
+        public static string Logout {
+            get {
+                return ResourceManager.GetString("Logout", resourceCulture);
             }
         }
         
@@ -286,6 +295,42 @@ namespace Chireiden.ModBrowser.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Both.
+        /// </summary>
+        public static string ModSideBoth {
+            get {
+                return ResourceManager.GetString("ModSideBoth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Client.
+        /// </summary>
+        public static string ModSideClient {
+            get {
+                return ResourceManager.GetString("ModSideClient", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to NoSync.
+        /// </summary>
+        public static string ModSideNoSync {
+            get {
+                return ResourceManager.GetString("ModSideNoSync", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server.
+        /// </summary>
+        public static string ModSideServer {
+            get {
+                return ResourceManager.GetString("ModSideServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Name {
@@ -300,6 +345,15 @@ namespace Chireiden.ModBrowser.Resources {
         public static string Privacy {
             get {
                 return ResourceManager.GetString("Privacy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register.
+        /// </summary>
+        public static string Register {
+            get {
+                return ResourceManager.GetString("Register", resourceCulture);
             }
         }
         
@@ -322,6 +376,15 @@ namespace Chireiden.ModBrowser.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Submit.
+        /// </summary>
+        public static string Submit {
+            get {
+                return ResourceManager.GetString("Submit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sync now.
         /// </summary>
         public static string SyncNow {
@@ -336,6 +399,15 @@ namespace Chireiden.ModBrowser.Resources {
         public static string TitleHomePage {
             get {
                 return ResourceManager.GetString("TitleHomePage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Index.
+        /// </summary>
+        public static string TitleModIndex {
+            get {
+                return ResourceManager.GetString("TitleModIndex", resourceCulture);
             }
         }
         

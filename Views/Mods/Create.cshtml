@@ -1,12 +1,14 @@
 ﻿@model Chireiden.ModBrowser.ViewModels.ModVM
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<Chireiden.ModBrowser.Resources.Localization> Loc
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = Loc["Create"];
 }
 
-<h1>Create</h1>
+<h1>@Loc["Create"]</h1>
 
-<h4>ModVM</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -17,14 +19,14 @@
                 <input asp-for="File" />
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="@Loc["Submit"]" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">@Loc["BackToList"]</a>
 </div>
 
 @section Scripts {

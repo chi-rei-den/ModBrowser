@@ -2,6 +2,7 @@
 using Ionic.Zlib;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 
 namespace Chireiden.ModBrowser.ModLoader
@@ -138,9 +139,13 @@ namespace Chireiden.ModBrowser.ModLoader
 
     public enum ModSide
     {
+        [Display(Name = "ModSideBoth", ResourceType = typeof(Resources.Localization))]
         Both,
+        [Display(Name = "ModSideClient", ResourceType = typeof(Resources.Localization))]
         Client,
+        [Display(Name = "ModSideServer", ResourceType = typeof(Resources.Localization))]
         Server,
+        [Display(Name = "ModSideNoSync", ResourceType = typeof(Resources.Localization))]
         NoSync
     }
 }

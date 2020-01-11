@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Chireiden.ModBrowser.ModLoader;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -82,13 +83,15 @@ namespace Chireiden.ModBrowser.Models
 
         public static string IconPath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".png");
 
-        public static string TagToHtml(this string value) => Format.Replace(value, (m) => {
+        public static ModSide ModSideEnum(this Mod mod) => Enum.Parse<ModSide>(mod.ModSide);
+
+        public static string TagToHtml(this string value) => Format.Replace(System.Net.WebUtility.HtmlEncode(value), (m) => {
             return m.Groups["tag"].Value switch
             {
-                "c" => $"<span style=\"color:#{m.Groups["options"]}\">{System.Net.WebUtility.HtmlEncode(m.Groups["text"].Value)}<span>",
+                "c" => $"<span style=\"color:#{m.Groups["options"]}\">{m.Groups["text"].Value}<span>",
                 "i" => $"<img src=\"direct/icons/{m.Groups["text"].Value}.png\"/>",
                 _ => m.Value
             };
-        });
+        }).Replace("\r\n", "<br />").Replace("\r", "<br />").Replace("\n", "<br />");
     }
 }

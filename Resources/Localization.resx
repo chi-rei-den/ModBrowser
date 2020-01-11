@@ -174,8 +174,11 @@
   <data name="IconURL" xml:space="preserve">
     <value>Icon</value>
   </data>
-  <data name="Index" xml:space="preserve">
-    <value>Index</value>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
   </data>
   <data name="ModBrowser" xml:space="preserve">
     <value>Mod Browser</value>
@@ -192,11 +195,26 @@
   <data name="ModSide" xml:space="preserve">
     <value>Mod Side</value>
   </data>
+  <data name="ModSideBoth" xml:space="preserve">
+    <value>Both</value>
+  </data>
+  <data name="ModSideClient" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="ModSideNoSync" xml:space="preserve">
+    <value>NoSync</value>
+  </data>
+  <data name="ModSideServer" xml:space="preserve">
+    <value>Server</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
   </data>
   <data name="Privacy" xml:space="preserve">
     <value>Privacy</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
@@ -204,11 +222,17 @@
   <data name="Size" xml:space="preserve">
     <value>Size</value>
   </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Submit</value>
+  </data>
   <data name="SyncNow" xml:space="preserve">
     <value>Sync now</value>
   </data>
   <data name="TitleHomePage" xml:space="preserve">
     <value>Home Page</value>
+  </data>
+  <data name="TitleModIndex" xml:space="preserve">
+    <value>Index</value>
   </data>
   <data name="UpdateTimeStamp" xml:space="preserve">
     <value>Last Updated</value>

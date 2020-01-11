@@ -174,8 +174,11 @@
   <data name="IconURL" xml:space="preserve">
     <value>图标</value>
   </data>
-  <data name="Index" xml:space="preserve">
-    <value>主页</value>
+  <data name="Login" xml:space="preserve">
+    <value>登入</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>登出</value>
   </data>
   <data name="ModBrowser" xml:space="preserve">
     <value>模组浏览器</value>
@@ -192,11 +195,26 @@
   <data name="ModSide" xml:space="preserve">
     <value>模组设置</value>
   </data>
+  <data name="ModSideBoth" xml:space="preserve">
+    <value>自动加载</value>
+  </data>
+  <data name="ModSideClient" xml:space="preserve">
+    <value>仅客户端加载</value>
+  </data>
+  <data name="ModSideNoSync" xml:space="preserve">
+    <value>不同步</value>
+  </data>
+  <data name="ModSideServer" xml:space="preserve">
+    <value>仅服务器加载</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>内部名称</value>
   </data>
   <data name="Privacy" xml:space="preserve">
     <value>隐私策略</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>注册</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>搜索</value>
@@ -204,11 +222,17 @@
   <data name="Size" xml:space="preserve">
     <value>文件大小</value>
   </data>
+  <data name="Submit" xml:space="preserve">
+    <value>提交</value>
+  </data>
   <data name="SyncNow" xml:space="preserve">
     <value>重新同步</value>
   </data>
   <data name="TitleHomePage" xml:space="preserve">
     <value>主页</value>
+  </data>
+  <data name="TitleModIndex" xml:space="preserve">
+    <value>模组列表</value>
   </data>
   <data name="UpdateTimeStamp" xml:space="preserve">
     <value>更新时间</value>

@@ -5,10 +5,10 @@
 @inject IHtmlLocalizer<Chireiden.ModBrowser.Resources.Localization> Loc
 
 @{
-    ViewData["Title"] = Loc["Index"];
+    ViewData["Title"] = Loc["TitleModIndex"];
 }
 
-<h1>@Loc["Index"]</h1>
+<h1>@Loc["TitleModIndex"]</h1>
 
 <p>
     <a asp-action="Create">@Loc["Create"]</a>
@@ -80,7 +80,7 @@
                     {
                         <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#desc_@Html.DisplayFor(modelItem => item.Name)">@Loc["Description"]</button>
                         <div id="desc_@Html.DisplayFor(modelItem => item.Name)" class="collapse">
-                            @Html.Raw(item.Description.Replace("\r\n", "<br />"))
+                            @Html.Raw(item.Description.TagToHtml())
                         </div>
                     }
                 </td>
