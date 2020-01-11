@@ -1,22 +1,25 @@
 ﻿@model List<Chireiden.ModBrowser.Models.Mod>
 @using Humanizer;
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<Chireiden.ModBrowser.Resources.Localization> Loc
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = Loc["Index"];
 }
 
-<h1>Index</h1>
+<h1>@Loc["Index"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">@Loc["Create"]</a>
 </p>
 @using (Html.BeginForm())
 {
     <div class="form-actions no-color">
         <p>
-            Find by name: <input type="text" name="Search" value="@ViewData["search"]" />
-            <input type="submit" value="Search" class="btn btn-primary" /> |
-            <a asp-action="Index">Back to Full List</a>
+            @Loc["FindByName"]<input type="text" name="Search" value="@ViewData["search"]" />
+            <input type="submit" value="@Loc["Search"]" class="btn btn-primary" /> |
+            <a asp-action="Index">@Loc["BackToFullList"]</a>
         </p>
     </div>
 }
@@ -60,22 +63,22 @@
                     }
                 </td>
                 <td>
-                    <a href="tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">Download @Html.DisplayFor(modelItem => item.Version) (@Html.Raw(item.Size.Bytes().ToString("#.#")))</a>
+                    <a href="tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">@Loc["Download"] @Html.DisplayFor(modelItem => item.Version) (@Html.Raw(item.Size.Bytes().ToString("#.#")))</a>
                 </td>
                 <td>
-                        @Html.Raw(item.Author.Truncate(20))
+                    @Html.Raw(item.Author.Truncate(20))
                 </td>
                 <td>
                     @if (!string.IsNullOrWhiteSpace(item.Homepage))
                     {
-                        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#home_@Html.DisplayFor(modelItem => item.Name)">Homepage</button>
+                        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#home_@Html.DisplayFor(modelItem => item.Name)">@Loc["Homepage"]</button>
                         <div id="home_@Html.DisplayFor(modelItem => item.Name)" class="collapse">
                             <a href="@Html.DisplayFor(modelItem => item.Homepage)">@Html.DisplayFor(modelItem => item.Homepage)</a>
                         </div>
                     }
                     @if (!string.IsNullOrWhiteSpace(item.Description))
                     {
-                        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#desc_@Html.DisplayFor(modelItem => item.Name)">Description</button>
+                        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#desc_@Html.DisplayFor(modelItem => item.Name)">@Loc["Description"]</button>
                         <div id="desc_@Html.DisplayFor(modelItem => item.Name)" class="collapse">
                             @Html.Raw(item.Description.Replace("\r\n", "<br />"))
                         </div>
@@ -88,7 +91,7 @@
                     @Html.DisplayFor(modelItem => item.ModLoaderVersion)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Name">Edit</a> | <a asp-action="Delete" asp-route-id="@item.Name">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.Name">@Loc["Edit"]</a> | <a asp-action="Delete" asp-route-id="@item.Name">@Loc["Delete"]</a>
                 </td>
             </tr>
         }

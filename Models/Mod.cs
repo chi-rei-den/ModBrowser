@@ -10,45 +10,59 @@ namespace Chireiden.ModBrowser.Models
     public class Mod
     {
         [Key, JsonProperty("name"), Required]
+        [Display(Name = "Name", ResourceType = typeof(Resources.Localization))]
         public string Name { get; set; }
 
-        [JsonProperty("displayname"), DisplayName("Name")]
+        [JsonProperty("displayname")]
+        [Display(Name = "DisplayName", ResourceType = typeof(Resources.Localization))]
         public string DisplayName { get; set; }
 
         [JsonProperty("version"), Required]
+        [Display(Name = "Version", ResourceType = typeof(Resources.Localization))]
         public string Version { get; set; }
 
         [JsonProperty("author"), Required]
+        [Display(Name = "Author", ResourceType = typeof(Resources.Localization))]
         public string Author { get; set; }
 
-        [JsonProperty("updateTimeStamp"), DisplayName("Last Updated")]
+        [JsonProperty("updateTimeStamp")]
+        [Display(Name = "UpdateTimeStamp", ResourceType = typeof(Resources.Localization))]
         public string UpdateTimeStamp { get; set; }
 
         [JsonProperty("description")]
+        [Display(Name = "Description", ResourceType = typeof(Resources.Localization))]
         public string Description { get; set; }
 
-        [JsonProperty("modloaderversion"), DisplayName("tModLoader Version")]
+        [JsonProperty("modloaderversion")]
+        [Display(Name = "ModLoaderVersion", ResourceType = typeof(Resources.Localization))]
         public string ModLoaderVersion { get; set; }
 
-        [JsonProperty("modreferences"), DisplayName("Mod References")]
+        [JsonProperty("modreferences")]
+        [Display(Name = "ModReferences", ResourceType = typeof(Resources.Localization))]
         public string ModReferences { get; set; }
 
         [JsonProperty("homepage")]
+        [Display(Name = "Homepage", ResourceType = typeof(Resources.Localization))]
         public string Homepage { get; set; }
 
-        [JsonProperty("iconurl"), DisplayName("Icon")]
+        [JsonProperty("iconurl")]
+        [Display(Name = "IconURL", ResourceType = typeof(Resources.Localization))]
         public string IconURL { get; set; }
 
-        [JsonProperty("modside"), DisplayName("Mod Side")]
+        [JsonProperty("modside")]
+        [Display(Name = "ModSide", ResourceType = typeof(Resources.Localization))]
         public string ModSide { get; set; } = "Both";
 
         [JsonProperty("downloads")]
+        [Display(Name = "Downloads", ResourceType = typeof(Resources.Localization))]
         public int Downloads { get; set; }
 
         [JsonProperty("hot")]
+        [Display(Name = "Hot", ResourceType = typeof(Resources.Localization))]
         public int Hot { get; set; }
 
         [JsonProperty("size")]
+        [Display(Name = "Size", ResourceType = typeof(Resources.Localization))]
         public int Size { get; set; }
 
         public Mod Clone() => (Mod)this.MemberwiseClone();

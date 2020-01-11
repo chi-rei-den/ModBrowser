@@ -1,15 +1,19 @@
 using Chireiden.ModBrowser.Data;
 using Chireiden.ModBrowser.Models;
+using Chireiden.ModBrowser.Resources;
 using Chireiden.ModBrowser.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
@@ -33,7 +37,7 @@ namespace Chireiden.ModBrowser
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSingleton<IHostedService, SyncService>();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddViewLocalization().AddDataAnnotationsLocalization(options => options.DataAnnotationLocalizerProvider = (type, factory) => new StringLocalizer<Localization>(factory));
             services.AddDirectoryBrowser();
             services.AddRazorPages();
         }
@@ -52,6 +56,15 @@ namespace Chireiden.ModBrowser
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 // app.UseHsts();
             }
+            var supportedCultures = new[] { new CultureInfo("en-US"), new CultureInfo("zh-CN"), };
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
+
             // app.UseHttpsRedirection();
             app.UseStaticFiles();
 

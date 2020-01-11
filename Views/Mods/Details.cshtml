@@ -1,11 +1,14 @@
 ﻿@model Chireiden.ModBrowser.Models.Mod
 @using Humanizer;
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<Chireiden.ModBrowser.Resources.Localization> Loc
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Loc["Details"];
 }
 
-<h1>Details of @Html.Raw(Model.DisplayName.TagToHtml())</h1>
+<h1>@Loc["DetailsHeader"].Value.FormatWith(@Html.Raw(Model.DisplayName.TagToHtml()))</h1>
 
 <div>
     <hr />
@@ -38,8 +41,8 @@
             File
         </dt>
         <dd class="col-sm-10">
-            <a href="tModLoader/download.php?Down=mods/@(Html.DisplayFor(model => model.Name)).tmod">Download</a> @Html.Raw(Model.Size.Bytes().ToString("#.#")) <a asp-action="Sync" asp-route-id="@Model.Name">Sync now</a>
-        </dd>
+            <a href="tModLoader/download.php?Down=mods/@(Html.DisplayFor(model => model.Name)).tmod">@Loc["Download"]</a> @Html.Raw(Model.Size.Bytes().ToString("#.#")) <a asp-action="Sync" asp-route-id="@Model.Name">@Loc["SyncNow"]</a>
+</dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UpdateTimeStamp)
         </dt>
@@ -113,6 +116,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Name">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Name">@Loc["Edit"]</a> |
+    <a asp-action="Index">@Loc["BackToList"]</a>
 </div>
