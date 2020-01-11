@@ -141,10 +141,13 @@ namespace Chireiden.ModBrowser.ModLoader
     {
         [Display(Name = "ModSideBoth", ResourceType = typeof(Resources.Localization))]
         Both,
+
         [Display(Name = "ModSideClient", ResourceType = typeof(Resources.Localization))]
         Client,
+
         [Display(Name = "ModSideServer", ResourceType = typeof(Resources.Localization))]
         Server,
+
         [Display(Name = "ModSideNoSync", ResourceType = typeof(Resources.Localization))]
         NoSync
     }

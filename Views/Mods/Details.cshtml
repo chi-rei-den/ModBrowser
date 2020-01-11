@@ -1,6 +1,7 @@
 ﻿@model Chireiden.ModBrowser.Models.Mod
 @using Humanizer;
 @using Microsoft.AspNetCore.Mvc.Localization
+@using Chireiden.ModBrowser.ModLoader
 
 @inject IHtmlLocalizer<Chireiden.ModBrowser.Resources.Localization> Loc
 
@@ -42,7 +43,7 @@
         </dt>
         <dd class="col-sm-10">
             <a href="/tModLoader/download.php?Down=mods/@(Html.DisplayFor(model => model.Name)).tmod">@Loc["Download"]</a> @Html.Raw(Model.Size.Bytes().ToString("#.#")) <a asp-action="Sync" asp-route-id="@Model.Name">@Loc["SyncNow"]</a>
-</dd>
+        </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.UpdateTimeStamp)
         </dt>
@@ -99,7 +100,7 @@
             @Html.DisplayNameFor(model => model.ModSide)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ModSideEnum())
+            @Html.Raw(Model.ModSideEnum())
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Downloads)

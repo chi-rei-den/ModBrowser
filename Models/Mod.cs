@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Resources;
 using System.Text.RegularExpressions;
 
 namespace Chireiden.ModBrowser.Models
@@ -83,12 +84,16 @@ namespace Chireiden.ModBrowser.Models
 
         public static string IconPath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".png");
 
-        public static ModSide ModSideEnum(this Mod mod) => Enum.Parse<ModSide>(mod.ModSide);
+        public static string ModSideEnum(this Mod mod)
+        {
+            var displayAttribute = typeof(ModSide).GetMember(mod.ModSide)[0].GetCustomAttributes(typeof(DisplayAttribute), false)[0] as DisplayAttribute;
+            return new ResourceManager(displayAttribute.ResourceType).GetString(displayAttribute.Name);
+        }
 
         public static string TagToHtml(this string value) => Format.Replace(System.Net.WebUtility.HtmlEncode(value), (m) => {
             return m.Groups["tag"].Value switch
             {
-                "c" => $"<span style=\"color:#{m.Groups["options"]}\">{m.Groups["text"].Value}<span>",
+                "c" => $"<span style=\"color:#{m.Groups["options"]}\">{m.Groups["text"].Value}</span>",
                 "i" => $"<img src=\"direct/icons/{m.Groups["text"].Value}.png\"/>",
                 _ => m.Value
             };
