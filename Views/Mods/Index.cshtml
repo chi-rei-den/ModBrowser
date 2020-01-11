@@ -63,7 +63,7 @@
                     }
                 </td>
                 <td>
-                    <a href="tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">@Loc["Download"] @Html.DisplayFor(modelItem => item.Version) (@Html.Raw(item.Size.Bytes().ToString("#.#")))</a>
+                    <a href="/tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">@Loc["Download"] @Html.DisplayFor(modelItem => item.Version) (@Html.Raw(item.Size.Bytes().ToString("#.#")))</a>
                 </td>
                 <td>
                     @Html.Raw(item.Author.Truncate(20))
