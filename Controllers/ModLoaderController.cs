@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
@@ -29,9 +30,25 @@ namespace Chireiden.ModBrowser.Controllers
         {
             var filename = Path.GetFileNameWithoutExtension(Down);
             var mod = this._context.Mod.Find(filename);
-            return mod != null
-                ? this.PhysicalFile(mod.FilePath(), MediaTypeNames.Application.Octet, filename + ".tmod")
-                : (IActionResult)this.NotFound();
+            if (mod != null)
+            {
+                return this.PhysicalFile(mod.FilePath(), MediaTypeNames.Application.Octet, $"{mod.Name}_{mod.Version}.tmod");
+            }
+            else
+            {
+                IEnumerable<Mod> result = this._context.Mod;
+                var search = Down.ToLower();
+                var found = result.Where(r => r.Name.ToLower().Contains(search)).ToList();
+                if (found.Count == 1)
+                {
+                    return this.PhysicalFile(found[0].FilePath(), MediaTypeNames.Application.Octet, $"{found[0].Name}_{found[0].Version}.tmod");
+                }
+                else if (found.Count > 1)
+                {
+                    return this.Content(string.Join(", ", found.Select(i => i.Name)));
+                }
+                return this.NotFound();
+            }
         }
 
         [HttpGet]

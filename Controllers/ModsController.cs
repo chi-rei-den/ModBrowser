@@ -46,7 +46,7 @@ namespace Chireiden.ModBrowser.Controllers
             if (!string.IsNullOrWhiteSpace(search))
             {
                 search = search.ToLower();
-                result = result.Where(r => r.Name.ToLower().Contains(search));
+                result = result.Where(r => r.Name.ToLower().Contains(search) || r.DisplayName.ToLower().Contains(search));
             }
 
             result = by switch
