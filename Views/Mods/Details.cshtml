@@ -71,7 +71,7 @@
                 @Html.DisplayNameFor(model => model.ModReferences)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.ModReferences)
+                @Html.Raw(string.Join(", ", Model.ModReferences.Split(",").Select(item => Html.ActionLink(item, "Details", "Mods", new { id = item.Trim() }).ToString())))
             </dd>
         }
         @if (!string.IsNullOrWhiteSpace(Model.Homepage))
