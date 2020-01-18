@@ -4,6 +4,7 @@ using Chireiden.ModBrowser.ModLoader;
 using Chireiden.ModBrowser.Services;
 using Chireiden.ModBrowser.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using FileIO = System.IO.File;
 
@@ -272,6 +274,15 @@ namespace Chireiden.ModBrowser.Controllers
             this._context.Mod.Remove(mod);
             await this._context.SaveChangesAsync();
             return this.RedirectToAction(nameof(Index));
+        }
+
+        public static string GetString(IHtmlContent content)
+        {
+            using (var writer = new StringWriter())
+            {
+                content.WriteTo(writer, HtmlEncoder.Default);
+                return writer.ToString();
+            }
         }
     }
 }
