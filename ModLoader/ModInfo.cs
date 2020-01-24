@@ -56,15 +56,15 @@ namespace Chireiden.ModBrowser.ModLoader
                     using var deflateStream = new DeflateStream(ms, CompressionMode.Decompress);
                     using var content = new BinaryReader(deflateStream);
 
-                    mod.Name = br.ReadString();
-                    mod.Version = "v" + br.ReadString();
+                    mod.Name = content.ReadString();
+                    mod.Version = "v" + content.ReadString();
 
                     if (!readInfo)
                     {
                         return true;
                     }
 
-                    var fileCount = br.ReadInt32();
+                    var fileCount = content.ReadInt32();
                     for (var i = 0; i < fileCount; i++)
                     {
                         var fileName = content.ReadString();
