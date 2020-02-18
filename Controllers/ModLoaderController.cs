@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Mime;
+using System.Text.RegularExpressions;
 
 namespace Chireiden.ModBrowser.Controllers
 {
@@ -119,9 +120,13 @@ namespace Chireiden.ModBrowser.Controllers
                 _ => null
             };
 
-            var clientVersion = new Version(!string.IsNullOrWhiteSpace(modloaderversion) && modloaderversion.Length > 12
-                ? modloaderversion.Substring(12)
-                : "0.0.0.0");
+            var clientVersion = new Version("0.0.0.0");
+            var match = Regex.Match(modloaderversion ?? "", "v(.*)");
+            if (!Version.TryParse(match.Groups[1].Value, out clientVersion))
+            {
+                Version.TryParse(modloaderversion, out clientVersion);
+            }
+
             var mirrorIcon = string.IsNullOrWhiteSpace(preserveicon);
             var modlist = this._context.Mod.AsEnumerable().Select((m) =>
             {
