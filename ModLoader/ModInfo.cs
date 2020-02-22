@@ -103,13 +103,13 @@ namespace Chireiden.ModBrowser.ModLoader
             {
                 _ = tag switch
                 {
-                    "modReferences" => mod.ModReferences ??= string.Join(", ", ReadList(br)),
-                    "author" => mod.Author ??= br.ReadString(),
-                    "version" => mod.Version ??= "v" + br.ReadString(),
-                    "displayName" => mod.DisplayName ??= br.ReadString(),
-                    "homepage" => mod.Homepage ??= br.ReadString(),
-                    "description" => mod.Description ??= br.ReadString(),
-                    "side" => mod.ModSide ??= ((ModSide)br.ReadByte()).ToString(),
+                    "modReferences" => mod.ModReferences = string.Join(", ", ReadList(br)),
+                    "author" => mod.Author = br.ReadString(),
+                    "version" => mod.Version = "v" + br.ReadString(),
+                    "displayName" => mod.DisplayName = br.ReadString(),
+                    "homepage" => mod.Homepage = br.ReadString(),
+                    "description" => mod.Description = br.ReadString(),
+                    "side" => mod.ModSide = ((ModSide)br.ReadByte()).ToString(),
 
                     #region Unused
 
