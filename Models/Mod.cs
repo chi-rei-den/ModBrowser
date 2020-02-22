@@ -79,12 +79,12 @@ namespace Chireiden.ModBrowser.Models
 
         public static Version GetVersion(this Mod mod)
         {
-            return new Version(mod.Version?.Substring(1) ?? "1.0");
+            return Version.TryParse(mod.Version?.Substring(1), out var result) ? result : new Version(1, 0);
         }
 
         public static Version GetModLoaderVersion(this Mod mod)
         {
-            return new Version(mod.ModLoaderVersion?.Substring(12) ?? SyncService.tModLoaderVersion.ToString());
+            return Version.TryParse(mod.ModLoaderVersion?.Substring(12), out var result) ? result : SyncService.tModLoaderVersion;
         }
 
         public static DateTime GetUpdateTimestamp(this Mod mod)

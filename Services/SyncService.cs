@@ -24,7 +24,7 @@ namespace Chireiden.ModBrowser.Services
         private readonly ILogger<SyncService> _logger;
         internal static HttpClient Http = new HttpClient() { Timeout = new TimeSpan(0, 5, 0) };
         internal static readonly TimeSpan Interval = TimeSpan.FromMinutes(30);
-        internal static Version tModLoaderVersion = new Version("0.11.6.2");
+        internal static Version tModLoaderVersion = Version.Parse("0.11.6.2");
         internal static ConcurrentQueue<string> UpdateRequested = new ConcurrentQueue<string>();
 
         public SyncService(IServiceScopeFactory scopeFactory, ILogger<SyncService> logger)
@@ -110,9 +110,7 @@ namespace Chireiden.ModBrowser.Services
                     this._logger.LogInformation($"Unpacked Mod list ({modlist.Count})");
 
                     // Use the version from listmods.php.
-                    var versions =
-                        modlist.Where(i => i.ModLoaderVersion?.Length > 12)
-                            .Max(i => new Version(i.ModLoaderVersion.Substring(12))) ?? tModLoaderVersion;
+                    var versions = modlist.Max(i => i.GetModLoaderVersion());
                     var platforms = new List<string>
                     {
                         $"ExampleMod.v{versions}.zip",
