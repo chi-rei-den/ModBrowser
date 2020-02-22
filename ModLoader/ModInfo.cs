@@ -73,6 +73,15 @@ namespace Chireiden.ModBrowser.ModLoader
                         {
                             content.ReadModInfo(mod);
                         }
+                        else if (fileName.EndsWith(".png") || fileName.EndsWith(".rawimg") || fileName.EndsWith(".mp3") || fileName.EndsWith(".wav") || fileName.EndsWith(".xnb") || fileName.StartsWith("Streaming/"))
+                        {
+                            var result = deflateStream.TotalOut + size;
+                            content.ReadBytes(size);
+                            if (deflateStream.TotalOut < result)
+                            {
+                                content.ReadBytes((int)(result - deflateStream.TotalOut));
+                            }
+                        }
                         else
                         {
                             content.ReadBytes(size);
