@@ -1,7 +1,7 @@
 ﻿using Chireiden.ModBrowser.ModLoader;
+using Chireiden.ModBrowser.Services;
 using Newtonsoft.Json;
 using System;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Resources;
@@ -67,22 +67,40 @@ namespace Chireiden.ModBrowser.Models
         [Display(Name = "Size", ResourceType = typeof(Resources.Localization))]
         public int Size { get; set; }
 
-        public Mod Clone() => (Mod)this.MemberwiseClone();
+        public Mod Clone()
+        {
+            return (Mod)this.MemberwiseClone();
+        }
     }
 
     public static class ModHelper
     {
         public static readonly Regex Format = new Regex("(?<!\\\\)\\[(?<tag>[a-zA-Z]{1,10})(\\/(?<options>[^:]+))?:(?<text>.+?)(?<!\\\\)\\]", RegexOptions.Compiled);
 
-        public static Version GetVersion(this Mod mod) => new Version(mod.Version.Substring(1));
+        public static Version GetVersion(this Mod mod)
+        {
+            return new Version(mod.Version?.Substring(1) ?? "1.0");
+        }
 
-        public static Version GetModLoaderVersion(this Mod mod) => new Version(mod.ModLoaderVersion.Substring(12));
+        public static Version GetModLoaderVersion(this Mod mod)
+        {
+            return new Version(mod.ModLoaderVersion?.Substring(12) ?? SyncService.tModLoaderVersion.ToString());
+        }
 
-        public static DateTime GetUpdateTimestamp(this Mod mod) => DateTime.TryParse(mod.UpdateTimeStamp, out var result) ? result : DateTime.Now;
+        public static DateTime GetUpdateTimestamp(this Mod mod)
+        {
+            return DateTime.TryParse(mod.UpdateTimeStamp, out var result) ? result : DateTime.Now;
+        }
 
-        public static string FilePath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".tmod");
+        public static string FilePath(this Mod mod)
+        {
+            return Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".tmod");
+        }
 
-        public static string IconPath(this Mod mod) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".png");
+        public static string IconPath(this Mod mod)
+        {
+            return Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods", mod.Name + ".png");
+        }
 
         public static string ModSideEnum(this Mod mod)
         {
@@ -90,13 +108,17 @@ namespace Chireiden.ModBrowser.Models
             return new ResourceManager(displayAttribute.ResourceType).GetString(displayAttribute.Name);
         }
 
-        public static string TagToHtml(this string value) => Format.Replace(System.Net.WebUtility.HtmlEncode(value), (m) => {
-            return m.Groups["tag"].Value switch
+        public static string TagToHtml(this string value)
+        {
+            return Format.Replace(System.Net.WebUtility.HtmlEncode(value), (m) =>
             {
-                "c" => $"<span style=\"color:#{m.Groups["options"]}\">{m.Groups["text"].Value}</span>",
-                "i" => $"<img src=\"direct/icons/{m.Groups["text"].Value}.png\"/>",
-                _ => m.Value
-            };
-        }).Replace("\r\n", "<br />").Replace("\r", "<br />").Replace("\n", "<br />");
+                return m.Groups["tag"].Value switch
+                {
+                    "c" => $"<span style=\"color:#{m.Groups["options"]}\">{m.Groups["text"].Value}</span>",
+                    "i" => $"<img src=\"direct/icons/{m.Groups["text"].Value}.png\"/>",
+                    _ => m.Value
+                };
+            }).Replace("\r\n", "<br />").Replace("\r", "<br />").Replace("\n", "<br />");
+        }
     }
 }

@@ -112,7 +112,7 @@ namespace Chireiden.ModBrowser.Services
                     // Use the version from listmods.php.
                     var versions =
                         modlist.Where(i => i.ModLoaderVersion?.Length > 12)
-                            .Select(i => new Version(i.ModLoaderVersion.Substring(12))).Max() ?? tModLoaderVersion;
+                            .Max(i => new Version(i.ModLoaderVersion.Substring(12))) ?? tModLoaderVersion;
                     var platforms = new List<string>
                     {
                         $"ExampleMod.v{versions}.zip",
