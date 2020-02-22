@@ -122,9 +122,9 @@ namespace Chireiden.ModBrowser.Controllers
 
             var clientVersion = new Version("0.0.0.0");
             var match = Regex.Match(modloaderversion ?? "", "v(.*)");
-            if (!Version.TryParse(match.Groups[1].Value, out clientVersion))
+            if (!Version.TryParse(match.Groups[1].Value, out clientVersion) && !Version.TryParse(modloaderversion, out clientVersion))
             {
-                Version.TryParse(modloaderversion, out clientVersion);
+                clientVersion = new Version("0.0.0.0");
             }
 
             var mirrorIcon = string.IsNullOrWhiteSpace(preserveicon);
