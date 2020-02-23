@@ -170,7 +170,8 @@ namespace Chireiden.ModBrowser.Services
                         {
                             using var scope = this.scopeFactory.CreateScope();
                             var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                            var found = db.Mod.Find(item.Name);
+                            var modName = item.Name;
+                            var found = db.Mod.Find(modName);
                             item.ModLoaderVersion ??= found?.ModLoaderVersion;
 
                             var mayNeedIcon = !File.Exists(item.IconPath());
@@ -179,7 +180,7 @@ namespace Chireiden.ModBrowser.Services
                             {
                                 updated = true;
                             }
-                            else if (requested.Contains(item.Name))
+                            else if (requested.Contains(modName))
                             {
                                 updated = true;
                                 this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) requested");
@@ -189,19 +190,19 @@ namespace Chireiden.ModBrowser.Services
                                 // Authors may change the version as they want, so we don't compare the version
                                 updated = true;
                                 this._logger.LogInformation(
-                                    $"Mod {item.DisplayName} ({item.Name}) {found?.Version} => {item.Version}, {found?.UpdateTimeStamp} => {item.UpdateTimeStamp}");
+                                    $"Mod {item.DisplayName} ({modName}) {found?.Version} => {item.Version}, {found?.UpdateTimeStamp} => {item.UpdateTimeStamp}");
                             }
 
                             if (updated)
                             {
                                 mayNeedIcon = true;
                                 var result = await Http.GetByteArrayAsync(
-                                    $"http://javid.ddns.net/tModLoader/download.php?Down=mods/{item.Name}.tmod");
+                                    $"http://javid.ddns.net/tModLoader/download.php?Down=mods/{modName}.tmod");
                                 File.WriteAllBytes(item.FilePath(), result);
                                 File.SetLastWriteTimeUtc(item.FilePath(), item.GetUpdateTimestamp());
                                 if (!item.ExtractInfo(result, true))
                                 {
-                                    this._logger.LogInformation($"Unable to extract from {item.Name}");
+                                    this._logger.LogInformation($"Unable to extract from {modName}");
                                 }
                             }
 
@@ -217,9 +218,11 @@ namespace Chireiden.ModBrowser.Services
                                 File.SetLastWriteTimeUtc(item.IconPath(), item.GetUpdateTimestamp());
                             }
 
+                            // Use the name from Mod Browser since two mods use different name
+                            item.Name = modName;
                             if (found == null)
                             {
-                                this._logger.LogInformation($"Mod {item.DisplayName} ({item.Name}) created.");
+                                this._logger.LogInformation($"Mod {item.DisplayName} ({modName}) created.");
                                 db.Mod.Add(item);
                             }
                             else
@@ -244,7 +247,7 @@ namespace Chireiden.ModBrowser.Services
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e.ToString());
+                    this._logger.LogError(e.ToString());
                 }
             }
         }
