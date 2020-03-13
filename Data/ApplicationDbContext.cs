@@ -17,5 +17,6 @@ namespace Chireiden.ModBrowser.Data
         }
 
         public DbSet<Mod> Mod { get; set; }
+        public DbSet<LocalizerPackage> Package { get; set; }
     }
 }

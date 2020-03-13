@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Chireiden.ModBrowser.Models.LocalizerPackage>
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IHtmlLocalizer<Chireiden.ModBrowser.Resources.Localization> Loc
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Version)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Language)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreateTimeStamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdateTimeStamp)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModVersion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mod)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Author)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Version)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Language)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateTimeStamp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UpdateTimeStamp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModVersion)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mod.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

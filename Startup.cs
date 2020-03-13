@@ -89,6 +89,7 @@ namespace Chireiden.ModBrowser
             }
 
             provider.Mappings[".tmod"] = MediaTypeNames.Application.Octet;
+            provider.Mappings[".locpack"] = MediaTypeNames.Application.Octet;
             provider.Mappings[".zip"] = MediaTypeNames.Application.Octet;
             provider.Mappings[".gz"] = MediaTypeNames.Application.Octet;
             provider.Mappings[".png"] = "image/png";
