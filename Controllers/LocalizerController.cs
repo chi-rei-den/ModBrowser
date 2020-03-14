@@ -34,6 +34,13 @@ namespace Chireiden.ModBrowser.Controllers
             return this.View(await applicationDbContext.ToListAsync());
         }
 
+        // GET: LocalizerPackages
+        public async Task<IActionResult> List()
+        {
+            var applicationDbContext = this._context.Package.Include(l => l.Mod);
+            return this.Json(await applicationDbContext.ToListAsync());
+        }
+
         public async Task<IActionResult> Download(int? id)
         {
             if (id == null)
