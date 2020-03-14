@@ -8,18 +8,19 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using FileIO = System.IO.File;
 
 namespace Chireiden.ModBrowser.Controllers
 {
-    public class LocalizerPackagesController : Controller
+    public class LocalizerController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<LocalizerPackagesController> _logger;
+        private readonly ILogger<LocalizerController> _logger;
 
-        public LocalizerPackagesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<LocalizerPackagesController> logger)
+        public LocalizerController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger<LocalizerController> logger)
         {
             this._context = context;
             this._userManager = userManager;
@@ -31,6 +32,23 @@ namespace Chireiden.ModBrowser.Controllers
         {
             var applicationDbContext = this._context.Package.Include(l => l.Mod);
             return this.View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<IActionResult> Download(int? id)
+        {
+            if (id == null)
+            {
+                return this.NotFound();
+            }
+
+            var localizerPackage = await this._context.Package
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (localizerPackage == null || !FileIO.Exists(localizerPackage.FilePath()))
+            {
+                return this.NotFound();
+            }
+            return this.PhysicalFile(localizerPackage.FilePath(), MediaTypeNames.Application.Octet, $"{localizerPackage.Name}_{localizerPackage.Version}.tmod");
         }
 
         // GET: LocalizerPackages/Details/5
@@ -95,7 +113,7 @@ namespace Chireiden.ModBrowser.Controllers
                 }
 
                 FileIO.WriteAllBytes(filename, buffer);
-                return this.RedirectToAction(nameof(Details), new { id = entry.Name });
+                return this.RedirectToAction(nameof(Details), new { id = entry.Id });
             }
             return this.View(mod);
         }
@@ -170,8 +188,6 @@ namespace Chireiden.ModBrowser.Controllers
             var buffer = new byte[length];
             mod.File.OpenReadStream().Read(buffer, 0, length);
 
-            var entry = new LocalizerPackage();
-
             if (this.ModelState.IsValid)
             {
                 var existing = await this._context.Package
@@ -192,14 +208,14 @@ namespace Chireiden.ModBrowser.Controllers
 
                 try
                 {
-                    PackageFile.FromFile(buffer).CopyTo(entry);
+                    PackageFile.FromFile(buffer).CopyTo(existing);
                 }
                 catch (Exception)
                 {
                     throw;
                 }
 
-                entry.UpdateTimeStamp = DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss");
+                existing.UpdateTimeStamp = DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss");
 
                 this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Update {existing.Name}");
                 try
@@ -219,7 +235,7 @@ namespace Chireiden.ModBrowser.Controllers
                 {
                     throw;
                 }
-                return this.RedirectToAction(nameof(Details), new { id = entry.Name });
+                return this.RedirectToAction(nameof(Details), new { id = existing.Id });
             }
             return this.View(mod);
         }

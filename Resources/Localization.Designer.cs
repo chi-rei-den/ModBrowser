@@ -97,6 +97,15 @@ namespace Chireiden.ModBrowser.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Created.
+        /// </summary>
+        public static string CreateTimeStamp {
+            get {
+                return ResourceManager.GetString("CreateTimeStamp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
         public static string Delete {
@@ -232,6 +241,24 @@ namespace Chireiden.ModBrowser.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Localizer.
+        /// </summary>
+        public static string Localizer {
+            get {
+                return ResourceManager.GetString("Localizer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string Login {
@@ -264,6 +291,15 @@ namespace Chireiden.ModBrowser.Resources {
         public static string ModLoaderVersion {
             get {
                 return ResourceManager.GetString("ModLoaderVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mod Name.
+        /// </summary>
+        public static string ModName {
+            get {
+                return ResourceManager.GetString("ModName", resourceCulture);
             }
         }
         
@@ -327,6 +363,15 @@ namespace Chireiden.ModBrowser.Resources {
         public static string ModSideServer {
             get {
                 return ResourceManager.GetString("ModSideServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mod Version.
+        /// </summary>
+        public static string ModVersion {
+            get {
+                return ResourceManager.GetString("ModVersion", resourceCulture);
             }
         }
         

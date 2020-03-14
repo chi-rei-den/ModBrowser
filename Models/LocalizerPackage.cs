@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Chireiden.ModBrowser.Models
 {
@@ -82,14 +77,7 @@ namespace Chireiden.ModBrowser.Models
                     using (var sr = new StreamReader(packageFile))
                     {
                         var content = sr.ReadToEnd();
-                        try
-                        {
-                            return JsonConvert.DeserializeObject<PackageFile>(content, new VersionConverter());
-                        }
-                        catch
-                        {
-                            return JsonConvert.DeserializeObject<PackageFile>(content);
-                        }
+                        return JsonConvert.DeserializeObject<PackageFile>(content, new VersionConverter());
                     }
                 }
             }
@@ -101,9 +89,9 @@ namespace Chireiden.ModBrowser.Models
             package.Description = this.Description;
             package.Language = this.Language;
             package.ModName = this.ModName;
-            package.ModVersion = this.ModVersion.ToString();
+            package.ModVersion = $"{this.ModVersion}";
             package.Name = this.Name;
-            package.Version = this.Version.ToString();
+            package.Version = $"{this.Version}";
         }
     }
 

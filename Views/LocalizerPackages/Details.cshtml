@@ -20,6 +20,12 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class="col-sm-2">
+            @Loc["File"]
+        </dt>
+        <dd class="col-sm-10">
+            <a asp-action="Download" asp-route-id="@Model.Id">@Loc["Download"]</a>
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Author)
         </dt>
         <dd class="col-sm-10">

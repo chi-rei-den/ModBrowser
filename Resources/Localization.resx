@@ -129,6 +129,9 @@
   <data name="Create" xml:space="preserve">
     <value>Create</value>
   </data>
+  <data name="CreateTimeStamp" xml:space="preserve">
+    <value>Created</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
@@ -174,6 +177,12 @@
   <data name="IconURL" xml:space="preserve">
     <value>Icon</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Localizer" xml:space="preserve">
+    <value>Localizer</value>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>Login</value>
   </data>
@@ -185,6 +194,9 @@
   </data>
   <data name="ModLoaderVersion" xml:space="preserve">
     <value>tModLoader Version</value>
+  </data>
+  <data name="ModName" xml:space="preserve">
+    <value>Mod Name</value>
   </data>
   <data name="ModReferences" xml:space="preserve">
     <value>Mod References</value>
@@ -206,6 +218,9 @@
   </data>
   <data name="ModSideServer" xml:space="preserve">
     <value>Server</value>
+  </data>
+  <data name="ModVersion" xml:space="preserve">
+    <value>Mod Version</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
