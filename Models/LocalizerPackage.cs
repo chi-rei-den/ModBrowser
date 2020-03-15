@@ -49,10 +49,12 @@ namespace Chireiden.ModBrowser.Models
         [Display(Name = "ModName", ResourceType = typeof(Resources.Localization))]
         public string ModName { get; set; }
 
+        [JsonIgnore]
         public Mod Mod { get; set; }
 
         public string UploaderId { get; set; }
 
+        [JsonIgnore]
         public ApplicationUser Uploader { get; set; }
     }
 

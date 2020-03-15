@@ -37,7 +37,9 @@ namespace Chireiden.ModBrowser.Controllers
         // GET: LocalizerPackages
         public async Task<IActionResult> List()
         {
-            var applicationDbContext = this._context.Package.Include(l => l.Mod);
+            var applicationDbContext = this._context.Package
+                .Include(l => l.Mod)
+                .Include(l => l.Uploader);
             return this.Json(await applicationDbContext.ToListAsync());
         }
 
@@ -105,6 +107,8 @@ namespace Chireiden.ModBrowser.Controllers
                 }
 
                 var user = await this._userManager.GetUserAsync(this.User);
+                entry.Uploader = user;
+                entry.UploaderId = user.Id;
 
                 this._logger.LogInformation($"User {user.UserName} ({user.AuthorName}) Create {entry.Name}");
 
@@ -126,6 +130,7 @@ namespace Chireiden.ModBrowser.Controllers
         }
 
         // GET: LocalizerPackages/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -142,7 +147,8 @@ namespace Chireiden.ModBrowser.Controllers
                 return this.NotFound();
             }
 
-            if (localizerPackage.Uploader.Id != (await this._userManager.GetUserAsync(this.User)).Id)
+            var user = await this._userManager.GetUserAsync(this.User);
+            if (localizerPackage.Uploader.Id != user.Id)
             {
                 return this.Forbid();
             }
@@ -155,7 +161,17 @@ namespace Chireiden.ModBrowser.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var localizerPackage = await this._context.Package.FindAsync(id);
+            var localizerPackage = await this._context.Package
+                .Include(l => l.Mod)
+                .Include(l => l.Uploader)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var user = await this._userManager.GetUserAsync(this.User);
+            if (localizerPackage.Uploader.Id != user.Id)
+            {
+                return this.Forbid();
+            }
+
             this._context.Package.Remove(localizerPackage);
             await this._context.SaveChangesAsync();
             return this.RedirectToAction(nameof(Index));
