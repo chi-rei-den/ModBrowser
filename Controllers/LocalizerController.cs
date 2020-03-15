@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Net.Mime;
@@ -40,7 +41,7 @@ namespace Chireiden.ModBrowser.Controllers
             var applicationDbContext = this._context.Package
                 .Include(l => l.Mod)
                 .Include(l => l.Uploader);
-            return this.Json(await applicationDbContext.ToListAsync());
+            return this.Content(JsonConvert.SerializeObject(await applicationDbContext.ToListAsync()), MediaTypeNames.Application.Json);
         }
 
         public async Task<IActionResult> Download(int? id)
