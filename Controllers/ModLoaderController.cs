@@ -46,7 +46,7 @@ namespace Chireiden.ModBrowser.Controllers
                 }
                 else if (found.Count > 1)
                 {
-                    return this.Content(string.Join(", ", found.Select(i => i.Name)));
+                    return this.Json(found.Select(i => i.Name).ToList());
                 }
                 return this.NotFound();
             }

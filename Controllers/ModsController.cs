@@ -101,6 +101,7 @@ namespace Chireiden.ModBrowser.Controllers
         [Authorize]
         public async Task<IActionResult> Create(ModVM mod)
         {
+            return this.StatusCode(503, "Mod change is disabled. Please upload to http://javid.ddns.net/tModLoader/register.php");
             if (this.ModelState.IsValid)
             {
                 var length = (int)mod.File.Length;
@@ -184,6 +185,7 @@ namespace Chireiden.ModBrowser.Controllers
         [Authorize]
         public async Task<IActionResult> Edit(string id, ModVM mod)
         {
+            return this.StatusCode(503, "Mod change is disabled. Please upload to http://javid.ddns.net/tModLoader/register.php");
             var length = (int)mod.File.Length;
             var buffer = new byte[length];
             mod.File.OpenReadStream().Read(buffer, 0, length);
@@ -264,6 +266,7 @@ namespace Chireiden.ModBrowser.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
+            return this.StatusCode(503, "Mod change is disabled. Please upload to http://javid.ddns.net/tModLoader/register.php");
             var mod = await this._context.Mod.FindAsync(id);
             var user = await this._userManager.GetUserAsync(this.User);
             if (!mod.Author.Split(", ").Contains(user.AuthorName))

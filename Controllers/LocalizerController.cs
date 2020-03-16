@@ -58,7 +58,7 @@ namespace Chireiden.ModBrowser.Controllers
             {
                 return this.NotFound();
             }
-            return this.PhysicalFile(localizerPackage.FilePath(), MediaTypeNames.Application.Octet, $"{localizerPackage.Name}_{localizerPackage.Version}.tmod");
+            return this.PhysicalFile(localizerPackage.FilePath(), MediaTypeNames.Application.Octet, $"{localizerPackage.Name}_{localizerPackage.Version}.locpack");
         }
 
         // GET: LocalizerPackages/Details/5
