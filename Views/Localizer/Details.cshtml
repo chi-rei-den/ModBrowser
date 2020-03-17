@@ -71,7 +71,7 @@
             @Html.DisplayNameFor(model => model.Mod)
         </dt>
         <dd class="col-sm-10">
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Mod.Name), "Details", "Mods", new { id = Model.Mod.Name })
+            @Html.ActionLink(Model.Mod.Name, "Details", "Mods", new { id = Model.Mod.Name })
         </dd>
     </dl>
 </div>
