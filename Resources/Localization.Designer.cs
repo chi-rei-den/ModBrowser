@@ -259,6 +259,15 @@ namespace Chireiden.ModBrowser.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Localizer Package.
+        /// </summary>
+        public static string LocalizerPackage {
+            get {
+                return ResourceManager.GetString("LocalizerPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string Login {

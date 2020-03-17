@@ -65,6 +65,12 @@
         <dd class="col-sm-10">
             @Html.Raw(Model.ModLoaderVersion.Substring(11))
         </dd>
+        <dt class="col-sm-2">
+            @Loc["LocalizerPackage"]
+        </dt>
+        <dd class="col-sm-10">
+            <a asp-controller="Localizer" asp-action="Index" asp-route-id="@Model.Name">@Loc["LocalizerPackage"]</a>
+        </dd>
         @if (!string.IsNullOrWhiteSpace(Model.ModReferences))
         {
             <dt class="col-sm-2">

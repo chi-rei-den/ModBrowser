@@ -183,6 +183,9 @@
   <data name="Localizer" xml:space="preserve">
     <value>Localizer</value>
   </data>
+  <data name="LocalizerPackage" xml:space="preserve">
+    <value>Localizer Package</value>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>Login</value>
   </data>

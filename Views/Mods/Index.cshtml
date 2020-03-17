@@ -83,6 +83,7 @@
                             @Html.Raw(item.Description.TagToHtml())
                         </div>
                     }
+                    <a asp-controller="Localizer" asp-action="Index" asp-route-id="@item.Name">@Loc["LocalizerPackage"]</a>
                 </td>
                 <td>
                     <span title="@Html.DisplayFor(modelItem => item.UpdateTimeStamp)">@Html.Raw(item.GetUpdateTimestamp().Humanize())</span>

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -29,10 +30,15 @@ namespace Chireiden.ModBrowser.Controllers
         }
 
         // GET: LocalizerPackages
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? mod)
         {
             var applicationDbContext = this._context.Package.Include(l => l.Mod);
-            return this.View(await applicationDbContext.ToListAsync());
+            IEnumerable<LocalizerPackage> result = await applicationDbContext.ToListAsync();
+            if (!string.IsNullOrWhiteSpace(mod))
+            {
+                result = result.Where(p => p.ModName == mod);
+            }
+            return this.View(result);
         }
 
         // GET: LocalizerPackages

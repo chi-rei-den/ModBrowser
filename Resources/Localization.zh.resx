@@ -183,6 +183,9 @@
   <data name="Localizer" xml:space="preserve">
     <value>汉化者</value>
   </data>
+  <data name="LocalizerPackage" xml:space="preserve">
+    <value>汉化包</value>
+  </data>
   <data name="Login" xml:space="preserve">
     <value>登入</value>
   </data>
