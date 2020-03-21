@@ -56,13 +56,14 @@ namespace Chireiden.ModBrowser.Services
                     string str;
                     try
                     {
-                        str = await Http.PostAsync("http://javid.ddns.net/tModLoader/listmods.php",
+                        var response = await Http.PostAsync("http://javid.ddns.net/tModLoader/listmods.php",
                             new FormUrlEncodedContent(new Dictionary<string, string>
                             {
                                 ["modloaderversion"] = tModLoaderVersion.ToString(),
                                 ["platform"] = "w",
                                 ["netversion"] = "4.0",
-                            })).Result.Content.ReadAsStringAsync();
+                            }));
+                        str = await response.Content.ReadAsStringAsync();
                         this._logger.LogInformation("Start Sync");
                     }
                     catch(Exception e)
@@ -129,7 +130,7 @@ namespace Chireiden.ModBrowser.Services
                             var downloadURL =
                                 $"https://github.com/tModLoader/tModLoader/releases/download/v{versions}/{platform}";
                             this._logger.LogInformation($"Download {platform} from {downloadURL}");
-                            var compressed = Http.GetByteArrayAsync(downloadURL).Result;
+                            var compressed = await Http.GetByteArrayAsync(downloadURL);
                             File.WriteAllBytes(Path.Combine(modsFolder, platform), compressed);
                         }
 
@@ -137,9 +138,8 @@ namespace Chireiden.ModBrowser.Services
                         continue;
                     }
 
-                    var descriptions = Http
-                        .GetStringAsync("http://javid.ddns.net/tModLoader/tools/querymodnamehomepagedescription.php")
-                        .Result;
+                    var descriptions = await Http
+                        .GetStringAsync("http://javid.ddns.net/tModLoader/tools/querymodnamehomepagedescription.php");
                     var desclist = JsonConvert.DeserializeObject<List<Mod>>(descriptions).ToDictionary(i => i.Name);
                     foreach (var item in modlist)
                     {
