@@ -39,6 +39,7 @@ namespace Chireiden.ModBrowser
             services.AddSingleton<IHostedService, SyncService>();
             services.AddControllersWithViews().AddViewLocalization().AddDataAnnotationsLocalization(options => options.DataAnnotationLocalizerProvider = (type, factory) => new StringLocalizer<Localization>(factory));
             services.AddDirectoryBrowser();
+            services.AddResponseCompression();
             services.AddRazorPages();
         }
 
@@ -72,6 +73,7 @@ namespace Chireiden.ModBrowser
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseResponseCompression();
 
             var modsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "mods");
             if (!Directory.Exists(modsFolder))
