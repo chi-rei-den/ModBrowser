@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Mime;
 using System.Text.RegularExpressions;
 
@@ -26,6 +27,7 @@ namespace Chireiden.ModBrowser.Controllers
             this._logger = logger;
         }
 
+        internal static HttpClient Http = new HttpClient(new HttpClientHandler { AllowAutoRedirect = false }) { Timeout = new TimeSpan(0, 1, 0) };
         [HttpGet, HttpPost]
         public IActionResult Download(string Down)
         {
@@ -33,6 +35,7 @@ namespace Chireiden.ModBrowser.Controllers
             var mod = this._context.Mod.Find(filename);
             if (mod != null)
             {
+                Http.GetAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{mod.Name}.tmod");
                 return this.PhysicalFile(mod.FilePath(), MediaTypeNames.Application.Octet, $"{mod.Name}_{mod.Version}.tmod");
             }
             else
@@ -42,6 +45,7 @@ namespace Chireiden.ModBrowser.Controllers
                 var found = result.Where(r => r.Name.ToLower().Contains(search)).ToList();
                 if (found.Count == 1)
                 {
+                    Http.GetAsync($"http://javid.ddns.net/tModLoader/download.php?Down=mods/{found[0]}.tmod");
                     return this.PhysicalFile(found[0].FilePath(), MediaTypeNames.Application.Octet, $"{found[0].Name}_{found[0].Version}.tmod");
                 }
                 else if (found.Count > 1)
