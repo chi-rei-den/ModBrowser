@@ -76,13 +76,14 @@ namespace Chireiden.ModBrowser.Services
                     string str;
                     try
                     {
-                        str = await Http.PostAsync(Configuration["SyncService:ListModUri"],
+                        var response = await Http.PostAsync(Configuration["SyncService:ListModUri"],
                             new FormUrlEncodedContent(new Dictionary<string, string>
                             {
                                 ["modloaderversion"] = tModLoaderVersion.ToString(),
                                 ["platform"] = "w",
                                 ["netversion"] = "4.0",
-                            })).Result.Content.ReadAsStringAsync();
+                            }));
+                        str = await response.Content.ReadAsStringAsync();
                         this._logger.LogInformation("Start Sync");
                     }
                     catch (Exception e)
@@ -148,7 +149,7 @@ namespace Chireiden.ModBrowser.Services
                         {
                             var downloadURL = Configuration["SyncService:TMLDownloadUri"] + $"/v{ versions }/{ platform}";
                             this._logger.LogInformation($"Download {platform} from {downloadURL}");
-                            var compressed = Http.GetByteArrayAsync(downloadURL).Result;
+                            var compressed = await Http.GetByteArrayAsync(downloadURL);
                             File.WriteAllBytes(Path.Combine(modsFolder, platform), compressed);
                         }
 
