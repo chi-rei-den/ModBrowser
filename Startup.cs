@@ -36,7 +36,9 @@ namespace Chireiden.ModBrowser
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data Source=sqlite.db"));
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.AddSingleton<IHostedService, SyncService>();
+
             services.AddControllersWithViews().AddViewLocalization().AddDataAnnotationsLocalization(options => options.DataAnnotationLocalizerProvider = (type, factory) => new StringLocalizer<Localization>(factory));
             services.AddDirectoryBrowser();
             services.AddRazorPages();
