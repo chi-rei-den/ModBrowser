@@ -2,6 +2,7 @@
 using Chireiden.ModBrowser.Models;
 using Chireiden.ModBrowser.ModLoader;
 using Ionic.Zlib;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,15 +24,33 @@ namespace Chireiden.ModBrowser.Services
     {
         private readonly IServiceScopeFactory scopeFactory;
         private readonly ILogger<SyncService> _logger;
-        internal static HttpClient Http = new HttpClient() { Timeout = new TimeSpan(0, 5, 0) };
+        private readonly IConfiguration Configuration;
+        internal static HttpClient Http;
         internal static readonly TimeSpan Interval = TimeSpan.FromMinutes(30);
         internal static Version tModLoaderVersion = Version.Parse("0.11.6.2");
         internal static ConcurrentQueue<string> UpdateRequested = new ConcurrentQueue<string>();
 
-        public SyncService(IServiceScopeFactory scopeFactory, ILogger<SyncService> logger)
+        public SyncService(IServiceScopeFactory scopeFactory, ILogger<SyncService> logger, IConfiguration configuration)
         {
             this.scopeFactory = scopeFactory;
             this._logger = logger;
+            this.Configuration = configuration;
+
+            if (string.IsNullOrEmpty(Configuration["SyncService:ProxyUri"]))
+            {
+                Http = new HttpClient() { Timeout = new TimeSpan(0, 5, 0) };
+            }
+            else
+            {
+                Http = new HttpClient(
+                    new HttpClientHandler
+                    {
+                        Proxy = new WebProxy(new Uri(Configuration["SyncService:ProxyUri"]), BypassOnLocal: true),
+                        UseProxy = true
+                    }
+                )
+                { Timeout = new TimeSpan(0, 5, 0) };
+            }
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -56,7 +76,7 @@ namespace Chireiden.ModBrowser.Services
                     string str;
                     try
                     {
-                        var response = await Http.PostAsync("http://javid.ddns.net/tModLoader/listmods.php",
+                        var response = await Http.PostAsync(Configuration["SyncService:ListModUri"],
                             new FormUrlEncodedContent(new Dictionary<string, string>
                             {
                                 ["modloaderversion"] = tModLoaderVersion.ToString(),
@@ -66,7 +86,7 @@ namespace Chireiden.ModBrowser.Services
                         str = await response.Content.ReadAsStringAsync();
                         this._logger.LogInformation("Start Sync");
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         this._logger.LogInformation($"POST listmods.php fail, {e}");
                         await Task.Delay(Interval);
@@ -76,7 +96,7 @@ namespace Chireiden.ModBrowser.Services
                     JObject json;
                     try
                     {
-                        json = (JObject) JsonConvert.DeserializeObject(str);
+                        json = (JObject)JsonConvert.DeserializeObject(str);
                     }
                     catch
                     {
@@ -127,8 +147,7 @@ namespace Chireiden.ModBrowser.Services
                         this._logger.LogInformation($"Update tModLoader {versions}");
                         foreach (var platform in platforms)
                         {
-                            var downloadURL =
-                                $"https://github.com/tModLoader/tModLoader/releases/download/v{versions}/{platform}";
+                            var downloadURL = Configuration["SyncService:TMLDownloadUri"] + $"/v{ versions }/{ platform}";
                             this._logger.LogInformation($"Download {platform} from {downloadURL}");
                             var compressed = await Http.GetByteArrayAsync(downloadURL);
                             File.WriteAllBytes(Path.Combine(modsFolder, platform), compressed);
@@ -138,8 +157,9 @@ namespace Chireiden.ModBrowser.Services
                         continue;
                     }
 
-                    var descriptions = await Http
-                        .GetStringAsync("http://javid.ddns.net/tModLoader/tools/querymodnamehomepagedescription.php");
+                    var descriptions = Http
+                        .GetStringAsync(Configuration["SyncService:DescriptionUri"])
+                        .Result;
                     var desclist = JsonConvert.DeserializeObject<List<Mod>>(descriptions).ToDictionary(i => i.Name);
                     foreach (var item in modlist)
                     {
@@ -196,8 +216,7 @@ namespace Chireiden.ModBrowser.Services
                             if (updated)
                             {
                                 mayNeedIcon = true;
-                                var result = await Http.GetByteArrayAsync(
-                                    $"http://javid.ddns.net/tModLoader/download.php?Down=mods/{modName}.tmod");
+                                var result = await Http.GetByteArrayAsync(Configuration["Syncservice:ModDownloadUri"] + "?Down=mods/{modName}.tmod");
                                 File.WriteAllBytes(item.FilePath(), result);
                                 File.SetLastWriteTimeUtc(item.FilePath(), item.GetUpdateTimestamp());
                                 if (!item.ExtractInfo(result, true))
@@ -208,7 +227,7 @@ namespace Chireiden.ModBrowser.Services
 
                             if (item.Size == 0)
                             {
-                                item.Size = (int) new FileInfo(item.FilePath()).Length;
+                                item.Size = (int)new FileInfo(item.FilePath()).Length;
                             }
 
                             if (mayNeedIcon && !string.IsNullOrWhiteSpace(item.IconURL))

@@ -8,6 +8,15 @@
     ViewData["Title"] = Loc["TitleModIndex"];
 }
 
+@section CSS{
+    <environment include="Development">
+        <link rel="stylesheet" href="~/css/modindex.css" asp-append-version="true" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/modindex.min.css" asp-append-version="true" />
+    </environment>
+}
+
 <h1>@Loc["TitleModIndex"]</h1>
 
 <p>
@@ -23,79 +32,67 @@
         </p>
     </div>
 }
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model[0].DisplayName), "Index", new { by = "n", order = ViewData["order"], filter = ViewData["search"] })
-            </th>
-            <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model[0].Version), "Index", new { by = "v", order = ViewData["order"], filter = ViewData["search"] }) |
-                @Html.ActionLink(Html.DisplayNameFor(model => model[0].Size), "Index", new { by = "s", order = ViewData["order"], filter = ViewData["search"] })
-            </th>
-            <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model[0].Author), "Index", new { by = "a", order = ViewData["order"], filter = ViewData["search"] })
-            </th>
-            <th />
-            <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model[0].UpdateTimeStamp), "Index", new { by = "u", order = ViewData["order"], filter = ViewData["search"] })
-            </th>
-            <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model[0].ModLoaderVersion), "Index", new { by = "m", order = ViewData["order"], filter = ViewData["search"] })
-            </th>
-            <th>
-                @Html.ActionLink(Html.DisplayNameFor(model => model[0].Downloads), "Index", new { by = "d", order = ViewData["order"], filter = ViewData["search"] }) |
-                @Html.ActionLink(Html.DisplayNameFor(model => model[0].Hot), "Index", new { by = "h", order = ViewData["order"], filter = ViewData["search"] })
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Name" title="@Html.DisplayFor(modelItem => item.Name) (@Html.DisplayFor(modelItem => item.DisplayName))">@(Html.Raw(item.DisplayName.TagToHtml()))</a>
-                    <br />
-                    @if (!string.IsNullOrWhiteSpace(item.IconURL))
-                    {
-                        <br />
-                        <img src="direct/@(Html.DisplayFor(modelItem => item.Name)).png" alt="@Html.DisplayFor(modelItem => item.IconURL)" />
-                    }
-                </td>
-                <td>
-                    <a href="/tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">@Loc["Download"] @Html.DisplayFor(modelItem => item.Version) (@Html.Raw(item.Size.Bytes().ToString("#.#")))</a>
-                </td>
-                <td>
-                    @Html.Raw(item.Author.Truncate(20))
-                </td>
-                <td>
-                    @if (!string.IsNullOrWhiteSpace(item.Homepage))
-                    {
-                        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#home_@Html.DisplayFor(modelItem => item.Name)">@Loc["Homepage"]</button>
-                        <div id="home_@Html.DisplayFor(modelItem => item.Name)" class="collapse">
-                            <a href="@Html.DisplayFor(modelItem => item.Homepage)">@Html.DisplayFor(modelItem => item.Homepage)</a>
-                        </div>
-                    }
-                    @if (!string.IsNullOrWhiteSpace(item.Description))
-                    {
-                        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#desc_@Html.DisplayFor(modelItem => item.Name)">@Loc["Description"]</button>
-                        <div id="desc_@Html.DisplayFor(modelItem => item.Name)" class="collapse">
-                            @Html.Raw(item.Description.TagToHtml())
-                        </div>
-                    }
-                    @Html.ActionLink(Loc.GetString("LocalizerPackage"), "Index", "Localizer", new { mod = item.Name })
-                </td>
-                <td>
-                    <span title="@Html.DisplayFor(modelItem => item.UpdateTimeStamp)">@Html.Raw(item.GetUpdateTimestamp().Humanize())</span>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ModLoaderVersion)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Name">@Loc["Edit"]</a> | <a asp-action="Delete" asp-route-id="@item.Name">@Loc["Delete"]</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-@Html.ActionLink("<<--", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] - 5, filter = ViewData["search"] }) | @Html.ActionLink("<-", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] - 1, filter = ViewData["search"] }) | @Html.ActionLink("->", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] + 1, filter = ViewData["search"] }) | @Html.ActionLink("-->>", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] + 5, filter = ViewData["search"] })
+
+<div class="btn-group" role="group">
+    @Html.ActionLink(Html.DisplayNameFor(model => model[0].DisplayName), "Index", new { by = "n", order = ViewData["order"], filter = ViewData["search"] }, new { @class = "btn btn-primary" })
+    @Html.ActionLink(Html.DisplayNameFor(model => model[0].Version), "Index", new { by = "v", order = ViewData["order"], filter = ViewData["search"] }, new { @class = "btn btn-primary" })
+    @Html.ActionLink(Html.DisplayNameFor(model => model[0].Size), "Index", new { by = "s", order = ViewData["order"], filter = ViewData["search"] }, new { @class = "btn btn-primary" })
+    @Html.ActionLink(Html.DisplayNameFor(model => model[0].Author), "Index", new { by = "a", order = ViewData["order"], filter = ViewData["search"] }, new { @class = "btn btn-primary" })
+    @Html.ActionLink(Html.DisplayNameFor(model => model[0].UpdateTimeStamp), "Index", new { by = "u", order = ViewData["order"], filter = ViewData["search"] }, new { @class = "btn btn-primary" })
+    @Html.ActionLink(Html.DisplayNameFor(model => model[0].ModLoaderVersion), "Index", new { by = "m", order = ViewData["order"], filter = ViewData["search"] }, new { @class = "btn btn-primary" })
+    @Html.ActionLink(Html.DisplayNameFor(model => model[0].Downloads), "Index", new { by = "d", order = ViewData["order"], filter = ViewData["search"] }, new { @class = "btn btn-primary" })
+    @Html.ActionLink(Html.DisplayNameFor(model => model[0].Hot), "Index", new { by = "h", order = ViewData["order"], filter = ViewData["search"] }, new { @class = "btn btn-primary" })
+</div>
+
+<div class="mod-masonry">
+    @foreach (var item in Model)
+    {
+        <div class="mod-item col-xl-4 col-md-6">
+            <div class="mod-item-context">
+                <div class="mod-simple-info">
+                    <img class="mod-pic" src="direct/@(Html.DisplayFor(modelItem => item.Name)).png" alt="@Html.DisplayFor(modelItem => item.IconURL)" />
+                    <p class="mod-name"><a asp-action="Details" asp-route-id="@item.Name" title="@Html.DisplayFor(modelItem => item.Name) (@Html.DisplayFor(modelItem => item.DisplayName))">@(Html.Raw(item.DisplayName.TagToHtml()))</a></p>
+                    <p>@Html.DisplayFor(modelItem => item.ModLoaderVersion)</p>
+                    <p>@Loc["Author"]：@Html.Raw(item.Author)</p>
+                    <p>@Loc["UpdateTimeStamp"]：@Html.Raw(item.GetUpdateTimestamp().Humanize())</p>
+                    <p>@Loc["Download"]：<a href="/tModLoader/download.php?Down=mods/@(Html.DisplayFor(modelItem => item.Name)).tmod">@Html.DisplayFor(modelItem => item.Version) (@Html.Raw(item.Size.Bytes().ToString("#.#")))</a></p>
+                </div>
+                <div id="desc_@Html.DisplayFor(modelItem => item.Name)" class="mod-info collapse">
+                    <p>@Loc["Homepage"]：<a href="@Html.DisplayFor(modelItem => item.Homepage)">@Html.DisplayFor(modelItem => item.Homepage)</a></p>
+                    @Html.Raw(item.Description.TagToHtml())
+                </div>
+                <div class="mod-footer">
+                    <div class="btn-group btn-group-sm" role="group">
+                        @Html.ActionLink(Loc.GetString("LocalizerPackage"), "Index", "Localizer", new { mod = item.Name }, new { @class = "btn btn-info" })
+                        <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Name">@Loc["Edit"]</a>
+                        <a class="btn btn-info" asp-action="Delete" asp-route-id="@item.Name">@Loc["Delete"]</a>
+                    </div>
+                    
+                    <a class="mod-switch" data-toggle="collapse" href="#desc_@Html.DisplayFor(modelItem => item.Name)">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-compact-down" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M1.553 6.776a.5.5 0 0 1 .67-.223L8 9.44l5.776-2.888a.5.5 0 1 1 .448.894l-6 3a.5.5 0 0 1-.448 0l-6-3a.5.5 0 0 1-.223-.67z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="btn-group" role="group">
+    @Html.ActionLink(" ", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] - 5, filter = ViewData["search"] }, new { @class = "page-btn page-prev-5 btn btn-secondary" })
+    @Html.ActionLink(" ", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] - 1, filter = ViewData["search"] }, new { @class = "page-btn page-prev btn btn-secondary" })
+    @Html.ActionLink(" ", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] + 1, filter = ViewData["search"] }, new { @class = "page-btn page-next btn btn-secondary" })
+    @Html.ActionLink(" ", "Index", new { by = ViewData["by"], page = (int)ViewData["page"] + 5, filter = ViewData["search"] }, new { @class = "page-btn page-next-5 btn btn-secondary" })
+</div>
+
+@section Scripts {
+    <script src="~/lib/masonry-layout/dist/masonry.pkgd.min.js"></script>
+    <environment include="Development">
+        <script src="~/js/modindex.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/js/modindex.min.js" asp-append-version="true"></script>
+    </environment>
+
+}
